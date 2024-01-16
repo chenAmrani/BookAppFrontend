@@ -16,7 +16,7 @@ export function Navbar({
       <BootstrapNavbar bg="dark" data-bs-theme="dark">
         <Container>
           <BootstrapNavbar.Brand>
-            <Link to="/">Put Logo here</Link>
+            <Link to='/src/assets/Logo.png'>Home Page</Link>
           </BootstrapNavbar.Brand>
           <Nav className="me-auto">
             {user ? (
