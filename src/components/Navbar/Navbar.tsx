@@ -16,13 +16,24 @@ export function Navbar({
       <BootstrapNavbar bg="dark" data-bs-theme="dark">
         <Container>
           <BootstrapNavbar.Brand>
-            <Link to='/src/assets/Logo.png'>Home Page</Link>
+            <Link to='/'><img
+                src="/src/assets/Logo.png"  
+                alt="Logo"
+                height="30"
+              /></Link>
+            
+            
           </BootstrapNavbar.Brand>
           <Nav className="me-auto">
-            {user ? (
+          {user ? (
+              <>
               <Link to="/" onClick={() => setUser(null)}>
-                Logout
+              Logout
               </Link>
+              <Link style={{marginLeft:"20px"}} to="/profile">
+              Profile
+              </Link>
+              </>
             ) : (
               <>
                 <Link className="nav-link" to="login">
@@ -34,8 +45,8 @@ export function Navbar({
                 </Link>
               </>
             )}
-            <Nav.Link>Features</Nav.Link>
-            <Nav.Link>Pricing</Nav.Link>
+            {/* <Nav.Link>Features</Nav.Link> */}
+            {/* <Nav.Link>Pricing</Nav.Link> */}
           </Nav>
         </Container>
       </BootstrapNavbar>

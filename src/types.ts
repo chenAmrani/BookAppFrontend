@@ -15,6 +15,7 @@ export interface Book {
 }
 
 export interface UserData {
+  image: string;
   books: Book[];
   email: string;
   name: string;
