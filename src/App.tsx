@@ -6,6 +6,7 @@ import { Signup } from "./pages/Signup/Signup";
 import { Home } from "./pages/Home/Home";
 import { User } from "./types";
 import { Login } from "./pages/Login/Login";
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
+          <Route path="/Profile" element={< Profile />} />
         </Routes>
       </main>
     </div>
