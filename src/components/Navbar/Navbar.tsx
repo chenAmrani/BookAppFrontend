@@ -13,7 +13,7 @@ export function Navbar({
 }) {
   return (
     <>
-      <BootstrapNavbar bg="dark" data-bs-theme="dark">
+      <BootstrapNavbar bg="dark" data-bs-theme="dark" >
         <Container>
           <BootstrapNavbar.Brand>
             <Link to='/'><img

@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import { User } from "../../types";
 import { BASE_URL } from "../../constants";
 import { GoogleLogin,/* GoogleOAuthProvider*/ } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -12,6 +13,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
   const [password, setPassword] = useState<string>("");
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [userData, setUserData] = useState<User | null>(null);
+  const navigate = useNavigate();
   
   //לבדוק לגבי שני אלו
   useEffect(() => {
@@ -35,6 +37,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     console.log("userData:", userData);
     setUser(userData);
     setUserData(userData);
+    navigate("/");
     setLoggedIn(false);
     
     
@@ -54,6 +57,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
+          navigate("/");
         }}
         onError={() => handleLoginError()}
       />

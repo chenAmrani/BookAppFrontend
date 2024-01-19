@@ -27,11 +27,11 @@ export interface UserData {
 }
 
 export interface Review {
-  BookName: string;
-  Date: string;
+  _id: string;
   text: string;
-      
-  }
+  author: string;
+  date: string;
+}
  
 
 export type User = UserData | null;
