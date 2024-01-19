@@ -3,6 +3,10 @@ import { BASE_URL } from "../../constants";
 import { Book } from "../../types";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments } from "@fortawesome/free-solid-svg-icons";
+import Card from "react-bootstrap/Card";
+import "./Home.css";
 
 export const Home = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -25,20 +29,27 @@ export const Home = () => {
   };
 
   return (
-    <div>
-      <h1 style={{ marginBottom: "50px" }}>Home Page</h1>
+    <div className="home-container" style={{marginTop:"-100px"}}>
+      {/* <h1 style={{ marginBottom: "50px" }}>Home Page</h1> */}
 
-      <div className="row row-cols-3">
+      <div className="row row-cols-3" style={{marginTop:"80px"}}>
+      
         {books.map((book) => (
-          <div key={book._id} className="col" onClick={() => handleBookClick(book)}>
-            <div>
-              <img
-                src={`${book.image}`}
+          <div key={book._id} className="col">
+            <Card onClick={() => handleBookClick(book)} style={{backgroundColor:""}}>
+              <Card.Img
+                variant="top"
+                src={book.image}
                 alt={book.name}
-                style={{ width: "200px", height: "300px", borderRadius: "4px" }}
+                style={{ width: "200px", height: "300px", borderRadius: "4px"}}
               />
-            </div>
-            <h2 style={{ marginTop: "10px" }}>{book.name}</h2>
+              <Card.Body>
+                <Card.Title>{book.name}</Card.Title>
+                <Card.Text>
+                <FontAwesomeIcon icon={faComments} /> {book.reviews?.length}
+                </Card.Text>
+              </Card.Body>
+            </Card>
           </div>
         ))}
       </div>
