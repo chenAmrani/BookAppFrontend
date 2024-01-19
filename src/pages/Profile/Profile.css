@@ -4,3 +4,16 @@
     margin-top: 80px;
     text-align: center ;
 }
+/* UserProfile.css */
+
+.user-profile-container {
+    background-color: rgb(192, 186, 186);
+    color: white;
+    width: 50%;
+    max-width: 800px; /* Adjust the maximum width as needed */
+    margin: 0 auto;
+    padding: 40px; /* Adjust the padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }

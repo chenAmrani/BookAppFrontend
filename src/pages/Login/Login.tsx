@@ -1,14 +1,26 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { User } from "../../types";
 import { BASE_URL } from "../../constants";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin,/* GoogleOAuthProvider*/ } from "@react-oauth/google";
+
 
 
 export function Login({ setUser }: { setUser: (user: User) => void }) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [userData, setUserData] = useState<User | null>(null);
+  
+  //לבדוק לגבי שני אלו
+  useEffect(() => {
+    console.log(loggedIn);
+  }, [loggedIn]);
+
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,22 +32,33 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     });
 
     const userData = await response.json();
+    console.log("userData:", userData);
     setUser(userData);
+    setUserData(userData);
+    setLoggedIn(false);
+    
+    
   };
-
+  
+  const handleLoginError = () => {
+    try {
+      throw new Error("Login Failed");
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
+  };
   return (
     <div style={{}}>
       <h1>Login</h1>
-
+     
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
         }}
-        onError={(e) => {
-          console.log("e", e);
-          console.log("Login Failed");
-        }}
+        onError={() => handleLoginError()}
       />
+
+
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
