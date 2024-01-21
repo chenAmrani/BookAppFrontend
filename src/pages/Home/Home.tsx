@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments } from "@fortawesome/free-solid-svg-icons";
 import Card from "react-bootstrap/Card";
 import "./Home.css";
+import StarRating from "../../components/Navbar/starsRating";
 
 export const Home = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -81,7 +82,7 @@ export const Home = () => {
               <p>Year: {selectedBook?.year}</p>
               <p>Pages: {selectedBook?.pages}</p>
               <p>Price: {selectedBook?.price}</p>
-              <p>Rating: {selectedBook?.rating}</p>
+              <p>Rating: <StarRating rating={selectedBook?.rating || 0} className="star-rating" /></p>
               <p>Category: {selectedBook?.category}</p>
               <p>Summary: {selectedBook?.summary}</p>
               {/* <h4>Comments</h4>
