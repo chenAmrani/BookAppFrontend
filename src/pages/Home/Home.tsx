@@ -82,7 +82,7 @@ export const Home = () => {
               <p>Year: {selectedBook?.year}</p>
               <p>Pages: {selectedBook?.pages}</p>
               <p>Price: {selectedBook?.price}</p>
-              <p>Rating: <StarRating rating={selectedBook?.rating || 0} className="star-rating" /></p>
+              <p>Rating: <StarRating rating={selectedBook?.rating || 0} /></p>
               <p>Category: {selectedBook?.category}</p>
               <p>Summary: {selectedBook?.summary}</p>
               {/* <h4>Comments</h4>
