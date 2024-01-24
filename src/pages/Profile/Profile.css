@@ -17,3 +17,19 @@
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
+
+  .user-profile-container {
+    text-align: center;
+  }
+  
+  .user-profile-container h1 {
+    padding-bottom: 40px;
+  }
+  
+  .user-profile-container img {
+    border-radius: 50%;
+    max-width: 250px; 
+    height: auto;
+    margin-bottom: 20px;
+  }
+  
