@@ -55,12 +55,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
 
       {userData ? (
         <>
-          {/* <p>
+          <p>
             <img
-              src={`${BASE_URL}/static/${userData.userData.image}`}
+              src={`${BASE_URL}/static/uploads/${userData.userData.image}`}
               alt="User Avatar"
             />
-          </p> */}
+          </p>
           <p>Name: {userData.userData.name}</p>
           <p>Email: {userData.userData.email}</p>
           {userData.userData.role === "author" && (
