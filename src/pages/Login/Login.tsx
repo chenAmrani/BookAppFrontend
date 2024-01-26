@@ -57,7 +57,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);
-          navigate("/");
+          // navigate("/");
         }}
         onError={() => handleLoginError()}
       />
