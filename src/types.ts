@@ -8,15 +8,13 @@ export interface Book {
   pages: number;
   price: number;
   rating: number;
-  reviews: string[]|undefined;
+  reviews: Review[] | undefined;
   summary: string;
   year: number;
   _id: string;
 }
 
 export interface UserData {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [x: string]: any;
   image: string;
   books: Book[];
   email: string;
@@ -29,9 +27,13 @@ export interface UserData {
 export interface Review {
   _id: string;
   text: string;
-  author: string;
-  date: string;
+  reviewerId: {
+    name: string;
+    image: string;
+    _id: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
- 
 
 export type User = UserData | null;
