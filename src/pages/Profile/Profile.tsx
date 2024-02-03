@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import { Book, User } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
+import { api } from "../../utilities/api";
 
 interface UserProfileProps {
-  userData: User;
+  user: User;
   setUser: (user: User) => void;
 }
 
-const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
+const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-  const [updatedName, setUpdatedName] = useState(userData?.name || "");
+  const [updatedName, setUpdatedName] = useState(user?.name || "");
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
+  const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
+  const [password, setPassword] = useState("");
 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -32,58 +35,92 @@ const UserProfile: React.FC<UserProfileProps> = ({ userData }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", updatedName);
-    formData.append("image", updatedImage? updatedImage :" ");
+    if (user?.name !== updatedName) {
+      formData.append("name", updatedName);
+    }
 
-    
-    const response = await fetch(`${BASE_URL}/api/update-profile`, {
-      method: "POST",
-      body: formData,
-    });
+    if (user?.email !== updatedEmail) {
+      formData.append("email", updatedEmail);
+    }
+
+    if (password) {
+      formData.append("password", password);
+    }
+
+    if (updatedImage) {
+      formData.append("image", updatedImage);
+    }
+
+    formData.append("id", user?._id || "");
+
+    const response = await api.updateUserProfile(formData);
 
     // Handle the response accordingly (display a success message, update the user data, etc.)
-    const updatedUserData = await response.json();
-    console.log("Updated User Data:", updatedUserData);
+    const updatedUser = await response.json();
+    console.log("Updated User Data:", updatedUser);
 
     // Close the update form
     setShowUpdateForm(false);
+    setUser(updatedUser);
   };
 
   return (
     <div className="user-profile-container">
       <h1 style={{ paddingBottom: "40px" }}>My Profile</h1>
 
-      {userData ? (
+      {user ? (
         <>
           <p>
             <img
-              src={`${BASE_URL}/static/uploads/${userData.userData.image}`}
+              src={`${BASE_URL}/static/uploads/${user.image}`}
               alt="User Avatar"
             />
           </p>
-          <p>Name: {userData.userData.name}</p>
-          <p>Email: {userData.userData.email}</p>
-          {userData.userData.role === "author" && (
-            <p>Books: {userData.userData.books?.map((book: Book) => book.name).join(", ")}</p>
+          <p>Name: {user.name}</p>
+          <p>Email: {user.email}</p>
+          {user.role === "author" && (
+            <p>
+              Books: {user.books?.map((book: Book) => book.name).join(", ")}
+            </p>
           )}
           <button onClick={handleUpdateClick}>Update Details</button>
 
           {showUpdateForm && (
             <form onSubmit={handleUpdateSubmit}>
-              <label style={{paddingTop:"30px" , paddingRight:"200px"}}>
-                New Name:
+              <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
+                Name:
                 <input
-                style={{width:"150px", marginLeft:"20px"}}
+                  style={{ width: "150px", marginLeft: "20px" }}
                   type="text"
                   value={updatedName}
                   onChange={handleNameChange}
                 />
               </label>
 
-              <label style={{paddingTop:"30px" , paddingRight:"120px"}}>
+              <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
+                Email:
+                <input
+                  style={{ width: "150px", marginLeft: "20px" }}
+                  type="text"
+                  value={updatedEmail}
+                  onChange={(e) => setUpdatedEmail(e.target.value)}
+                />
+              </label>
+
+              <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
+                New password:
+                <input
+                  style={{ width: "150px", marginLeft: "20px" }}
+                  type="text"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </label>
+
+              <label style={{ paddingTop: "30px", paddingRight: "120px" }}>
                 New Image:
                 <input
-                style={{width:"150px", marginLeft:"30px", color:"white"}}
+                  style={{ width: "150px", marginLeft: "30px", color: "white" }}
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
