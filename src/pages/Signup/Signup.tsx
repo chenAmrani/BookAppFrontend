@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Role, User } from "../../types";
 import { BASE_URL } from "../../constants";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 
 export function Signup({ setUser }: { setUser: (user: User) => void }) {
   const [role, setRole] = useState<Role>("reader");
@@ -34,9 +35,20 @@ export function Signup({ setUser }: { setUser: (user: User) => void }) {
     setUser(userData);
   };
 
+  const onGoogleLoginSuccess = (credentialResponse: CredentialResponse) => {
+    console.log(credentialResponse);
+  }
+
+  const onGoogleLoginError = () => {
+    console.log("Google login failed");
+  }
+
   return (
     <div style={{}}>
       <h1>Signup</h1>
+      <div>
+        <GoogleLogin onSuccess={onGoogleLoginSuccess} onError={onGoogleLoginError} />
+      </div>
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
