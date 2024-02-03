@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import /*React*/ { useEffect, useState } from "react";
 import { BASE_URL, STATIC_ASSETS_URL } from "../../constants";
 import { Book /*Review*/, Review, User } from "../../types";
 import Modal from "react-bootstrap/Modal";
