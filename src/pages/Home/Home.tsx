@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { BASE_URL } from "../../constants";
-import { Book, /*Review*/ } from "../../types";
+import React, { useEffect, useState } from "react";
+import { BASE_URL, STATIC_ASSETS_URL } from "../../constants";
+import { Book /*Review*/, Review, User } from "../../types";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,30 +8,57 @@ import { faComments } from "@fortawesome/free-solid-svg-icons";
 import Card from "react-bootstrap/Card";
 import "./Home.css";
 import StarRating from "../../components/Navbar/starsRating";
+import { api } from "../../utilities/api";
 
-export const Home = () => {
+export const Home = ({ user }: { user: User }) => {
+  console.log("user", user);
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [selectedBookReviews, setSelectedBookReviews] = useState<Review[]>([]);
+  const [comment, setComment] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [editedReview, setEditedReview] = useState<Review | null>(null);
 
-  useEffect(() => {
+  function fetchBooks() {
     fetch(`${BASE_URL}/book`)
       .then((res) => res.json())
       .then((data) => setBooks(data));
+  }
+
+  useEffect(() => {
+    fetchBooks();
   }, []);
 
-  const handleBookClick = (book: Book) => {
+  async function fetchReviewByBookId(id: string) {
+    const response = await api.getReviewsByBookId(id);
+    const reviews = await response.json();
+    setSelectedBookReviews(reviews);
+  }
+
+  const handleBookClick = async (book: Book) => {
     setSelectedBook(book);
     setShowModal(true);
+    await fetchReviewByBookId(book._id);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
-  const handleCommentSubmit = (newComment: string) => {
-    // Handle submitting a new comment here, e.g., update the state or make an API call
-    console.log("New Comment:", newComment);
+  const handleReviewSubmit = async () => {
+    console.log("comment", comment);
+    if (!selectedBook?._id) return;
+    await api.addNewComment(selectedBook._id, comment);
+    fetchBooks();
+    await fetchReviewByBookId(selectedBook._id);
+  };
+
+  const handleUpdateReview = async () => {
+    if (!editedReview?._id) return;
+    await api.updateReview(editedReview._id, editedReview.text);
+    fetchBooks();
+    await fetchReviewByBookId(selectedBook!._id);
+    setEditedReview(null);
   };
 
   return (
@@ -56,7 +83,8 @@ export const Home = () => {
               <Card.Body style={{ boxShadow: "revert" }}>
                 <Card.Title>{book.name}</Card.Title>
                 <Card.Text>
-                  <FontAwesomeIcon icon={faComments} /> {book.reviews?.length} Comments
+                  <FontAwesomeIcon icon={faComments} /> {book.reviews?.length}{" "}
+                  Comments
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -64,7 +92,11 @@ export const Home = () => {
         ))}
       </div>
 
-      <Modal show={showModal} onHide={handleCloseModal} className="custom-modal">
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        className="custom-modal"
+      >
         <Modal.Header closeButton className="bg-dark text-white">
           <Modal.Title>{selectedBook?.name}</Modal.Title>
         </Modal.Header>
@@ -82,32 +114,75 @@ export const Home = () => {
               <p>Year: {selectedBook?.year}</p>
               <p>Pages: {selectedBook?.pages}</p>
               <p>Price: {selectedBook?.price}</p>
-              <p>Rating: <StarRating rating={selectedBook?.rating || 0} /></p>
+              <p>
+                Rating: <StarRating rating={selectedBook?.rating || 0} />
+              </p>
               <p>Category: {selectedBook?.category}</p>
               <p>Summary: {selectedBook?.summary}</p>
-              {/* <h4>Comments</h4>
-              {selectedBook?.reviews?.map((review: Review) => (
-                <div key={review._id} className="comment-panel">
-                  <p>Name: {review.author}</p>
-                  <div className="comment-details">
-                    <p>Date: {review.date}</p>
-                    <p>text: {review.text}</p>
-                  </div>
-                </div>
-              ))} */}
-              <div className="comment-input-form">
-                <textarea
-                  placeholder="Add your comment..."
-                  rows={3}
-                  // You can use state to handle the new comment input
-                />
-                <Button
-                  variant="primary"
-                  onClick={() => handleCommentSubmit("New comment text")}
-                >
-                  Comment
-                </Button>
+            </div>
+            <div className="comment-input-form">
+              <h4>Comments</h4>
+              <div className="reviews-container">
+                {selectedBookReviews.map((review) => {
+                  console.log("review", review);
+                  return (
+                    <div key={review._id} className="reviews-panel">
+                      <div className="review-image">
+                        <img
+                          src={STATIC_ASSETS_URL + review.reviewerId.image}
+                          alt="avatar"
+                        />
+                      </div>
+                      <div>
+                        <div className="comment-details">
+                          <p className="name">{review.reviewerId.name}</p>
+                          <p className="review"> {review.text}</p>
+                          <p className="date"> {review.updatedAt}</p>
+                        </div>
+                      </div>
+                      <div style={{ flex: 1 }}></div>
+                      <div>
+                        {user?._id === review.reviewerId._id && (
+                          <Button onClick={() => setEditedReview(review)}>
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+              {editedReview ? (
+                <>
+                  <textarea
+                    rows={3}
+                    value={editedReview.text}
+                    onChange={(e) =>
+                      setEditedReview((prev) => ({
+                        ...(prev as Review),
+                        text: e.target.value,
+                      }))
+                    }
+                    // You can use state to handle the new comment input
+                  />
+                  <Button variant="primary" onClick={handleUpdateReview}>
+                    Update
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <textarea
+                    placeholder="Add your comment..."
+                    rows={3}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    // You can use state to handle the new comment input
+                  />
+                  <Button variant="primary" onClick={handleReviewSubmit}>
+                    Comment
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </Modal.Body>
