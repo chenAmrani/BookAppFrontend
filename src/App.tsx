@@ -16,26 +16,23 @@ function App() {
       <Navbar user={user} setUser={setUser} />
       <main>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} />} />
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route
             path="/Profile"
             element={
               user ? (
-                <Profile userData={user} setUser={setUser} />
+                <Profile user={user} setUser={setUser} />
               ) : (
                 <Navigate to="/login" />
               )
             }
           />
         </Routes>
-        
       </main>
     </div>
   );
 }
-
-
 
 export default App;
