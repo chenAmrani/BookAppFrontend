@@ -15,13 +15,15 @@ export interface Book {
 }
 
 export interface UserData {
-  image: string;
+  image?: string;
   books: Book[];
   email: string;
   name: string;
-  refreshTokens: string[];
+  accessToken?: string,
+  refreshToken?: string
   role: Role;
   _id: string;
+
 }
 
 export interface Review {

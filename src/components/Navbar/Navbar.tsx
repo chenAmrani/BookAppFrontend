@@ -10,6 +10,7 @@ export function Navbar({
 }: {
   user: User;
   setUser: (user: User | null) => void;
+  googleSignIn: boolean;
 }) {
   return (
     <>
@@ -25,7 +26,7 @@ export function Navbar({
             
           </BootstrapNavbar.Brand>
           <Nav className="me-auto">
-          {user ? (
+          {user ?(
               <>
               <Link to="/" onClick={() => setUser(null)}>
               Logout
@@ -45,8 +46,6 @@ export function Navbar({
                 </Link>
               </>
             )}
-            {/* <Nav.Link>Features</Nav.Link> */}
-            {/* <Nav.Link>Pricing</Nav.Link> */}
           </Nav>
         </Container>
       </BootstrapNavbar>
