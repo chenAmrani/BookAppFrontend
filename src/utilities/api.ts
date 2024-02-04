@@ -38,10 +38,15 @@ const updateUserProfile = async (formData: FormData) => {
     },
   });
 };
+const getUserBooks = async (userId: string) => {
+  const response = await fetch(`${BASE_URL}/user/books/${userId}`);
+  return response;
+};
 
 export const api = {
   addNewComment,
   getReviewsByBookId,
   updateReview,
   updateUserProfile,
+  getUserBooks,
 };

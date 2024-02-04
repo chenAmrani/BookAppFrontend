@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Book, User } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
@@ -15,6 +15,23 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
   const [password, setPassword] = useState("");
+  const [userBooks, setUserBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const fetchUserBooks = async () => {
+      if (user?.role === "author") {
+        try {
+          const response = await api.getUserBooks(user._id || "");
+          const books = await response.json();
+          setUserBooks(books);
+        } catch (error) {
+          console.error("Error fetching user books:", error);
+        }
+      }
+    };
+
+    fetchUserBooks();
+  }, [user]);
 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -78,12 +95,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </p>
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
-          {user.role === "author" && (
-            <p>
-              Books: {user.books?.map((book: Book) => book.name).join(", ")}
-            </p>
-          )}
-          <button onClick={handleUpdateClick}>Update Details</button>
+          {user.role === "author" && userBooks.length > 0 && (
+          <div className="user-books-section">
+            <h2>Your Books</h2>
+            <div className="user-books-list">
+              {userBooks.map((book) => (
+                <div key={book._id} className="book-item">
+                  <img src={book.image} alt={book.name} />
+                  <p>{book.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        <button onClick={handleUpdateClick}>Update Details</button>
 
           {showUpdateForm && (
             <form onSubmit={handleUpdateSubmit}>
