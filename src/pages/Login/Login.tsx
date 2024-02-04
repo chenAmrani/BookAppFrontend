@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { User } from "../../types";
 import { ACCESS_TOKEN_KEY, BASE_URL } from "../../constants";
-import { GoogleLogin /* GoogleOAuthProvider*/ } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 
 export function Login({ setUser }: { setUser: (user: User) => void }) {
@@ -35,24 +34,11 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     setLoggedIn(false);
   };
 
-  const handleLoginError = () => {
-    try {
-      throw new Error("Login Failed");
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
-  };
   return (
     <div style={{}}>
       <h1>Login</h1>
 
-      <GoogleLogin
-        onSuccess={(credentialResponse) => {
-          console.log(credentialResponse);
-          // navigate("/");
-        }}
-        onError={() => handleLoginError()}
-      />
+     
 
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
