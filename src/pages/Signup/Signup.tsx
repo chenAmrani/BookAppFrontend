@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [loggedIn, setLoggedIn] = useState<boolean>(false);
-    const [signedUp, setSignedUp] = useState<boolean>(false); // Add signedUp state
+    const [signedUp, setSignedUp] = useState<boolean>(false); 
     const avatarRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
   
@@ -28,6 +28,7 @@ import { useNavigate } from "react-router-dom";
       }
     }, [signedUp]);
   
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
   
@@ -46,19 +47,26 @@ import { useNavigate } from "react-router-dom";
         method: "POST",
         body: formData,
       });
-  
+
       const userData = await response.json();
       setUser(userData);
-      setSignedUp(true); // Set signedUp to true after successful signup
+      setSignedUp(true); 
     };
   
     const onGoogleLoginSuccess = async (credentialResponse: CredentialResponse) => {
       console.log(credentialResponse);
       try {
         const res = await googleSignin(credentialResponse);
-        console.log(res);
+        
+        const userData = res;
+        if (!userData) return;
+        const userImage = res.image;
+        console.log("userImage: ", userImage);
+        
+        setUser(userData);
+        console.log("the res is: ", res);
         navigate("/");
-        setSignedUp(true); // Set signedUp to true after successful Google sign-in
+        setSignedUp(true); 
       } catch (e) {
         console.log(e);
       }
