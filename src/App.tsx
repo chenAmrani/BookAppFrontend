@@ -13,7 +13,7 @@ function App() {
 
   return (
     <div className="App">
-      <Navbar user={user} setUser={setUser} />
+      <Navbar user={user} setUser={setUser} googleSignIn={false} /> 
       <main>
         <Routes>
           <Route path="/" element={<Home user={user} />} />
