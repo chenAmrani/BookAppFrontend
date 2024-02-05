@@ -3,16 +3,13 @@ import { Book, User } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
 import { api } from "../../utilities/api";
-// import { getUserBooks , getBookById} from "../../utilities/books";
-// import { ObjectId } from "mongoose";
-// import { getUserBooks } from "../../utilities/books";
+
 interface UserProfileProps {
   user: User;
   setUser: (user: User) => void;
 }
 
-// const res = await getUserBooks();
-// console.log("the profile books", res.myBooks);
+
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
