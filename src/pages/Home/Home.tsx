@@ -76,7 +76,7 @@ export const Home = ({ user }: { user: User }) => {
             >
               <Card.Img
                 variant="top"
-                src={book.image}
+                src={`${BASE_URL}/static/books/${book.image}`}
                 alt={book.name}
                 style={{ width: "200px", height: "300px", borderRadius: "4px" }}
               />
