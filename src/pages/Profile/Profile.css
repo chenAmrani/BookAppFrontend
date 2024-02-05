@@ -33,3 +33,19 @@
     margin-bottom: 20px;
   }
   
+  .books-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .book-item {
+    margin: 10px; 
+  }
+  
+  .book-image {
+    width: 150px; /* Adjust image width as needed */
+    height: auto;
+    border-radius: 8px; /* Adjust the border radius as needed */
+  }
+  

@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Book, User } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
 import { api } from "../../utilities/api";
-
+// import { getUserBooks , getBookById} from "../../utilities/books";
+// import { ObjectId } from "mongoose";
+// import { getUserBooks } from "../../utilities/books";
 interface UserProfileProps {
   user: User;
   setUser: (user: User) => void;
 }
+
+// const res = await getUserBooks();
+// console.log("the profile books", res.myBooks);
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -15,24 +20,40 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
   const [password, setPassword] = useState("");
-  const [userBooks, setUserBooks] = useState<Book[]>([]);
+  const [profileBooks, setProfileBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    const fetchUserBooks = async () => {
-      if (user?.role === "author") {
-        try {
-          const response = await api.getUserBooks(user._id || "");
-          const books = await response.json();
-          setUserBooks(books);
-        } catch (error) {
-          console.error("Error fetching user books:", error);
-        }
+    const fetchProfileBooks = async () => {
+      try {
+        const res = await api.getUserBooks();
+        console.log("the profile books", res.myBooks);
+       
+
+        const bookPromises = res.myBooks.map(async (bookId: string) => {
+          try{
+          const book = await api.getBookById(bookId);
+          console.log("the book", book);
+          return book;
+          }
+          catch (error) {
+          console.error("Error fetching book:", error);
+          return null;
+        }});
+
+        const books = await Promise.all(bookPromises);
+        console.log("the books", books);
+        setProfileBooks(books);
+      } catch (error) {
+        console.error("Error fetching profile books:", error);
       }
     };
 
-    fetchUserBooks();
-  }, [user]);
+    fetchProfileBooks();
+  }, []); 
 
+
+
+ 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
   };
@@ -72,15 +93,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
 
     const response = await api.updateUserProfile(formData);
 
-    // Handle the response accordingly (display a success message, update the user data, etc.)
     const updatedUser = await response.json();
     console.log("Updated User Data:", updatedUser);
 
-    // Close the update form
+
     setShowUpdateForm(false);
     setUser(updatedUser);
   };
-
+ 
   return (
     <div className="user-profile-container">
       <h1 style={{ paddingBottom: "40px" }}>My Profile</h1>
@@ -95,20 +115,25 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </p>
           <p>Name: {user.name}</p>
           <p>Email: {user.email}</p>
-          {user.role === "author" && userBooks.length > 0 && (
-          <div className="user-books-section">
-            <h2>Your Books</h2>
-            <div className="user-books-list">
-              {userBooks.map((book) => (
-                <div key={book._id} className="book-item">
-                  <img src={book.image} alt={book.name} />
-                  <p>{book.name}</p>
-                </div>
-              ))}
+          {user.role === "author" && profileBooks.length > 0 && (
+            <div className="user-books-section">
+              <h2>Your Books</h2>
+              <div className="books-container">
+                {profileBooks.map((book) => (
+                  <div key={book._id} className="book-item">
+                    <img
+                      src={`${BASE_URL}/static/books/${book.image}`}
+                      alt="Book Cover"
+                      style={{ width: "150px", height: "200px", borderRadius: "4px" }}
+                      className="book-image"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-        <button onClick={handleUpdateClick}>Update Details</button>
+          )}
+          <button onClick={handleUpdateClick}>Update Details</button>
+
 
           {showUpdateForm && (
             <form onSubmit={handleUpdateSubmit}>
