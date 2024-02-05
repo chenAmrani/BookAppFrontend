@@ -18,6 +18,8 @@ export const Home = ({ user }: { user: User }) => {
   const [comment, setComment] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editedReview, setEditedReview] = useState<Review | null>(null);
+  const [editedBook, setEditedBook] = useState<Book | null>(null);
+ 
 
   function fetchBooks() {
     fetch(`${BASE_URL}/book`)
@@ -33,6 +35,7 @@ export const Home = ({ user }: { user: User }) => {
     const response = await api.getReviewsByBookId(id);
     const reviews = await response.json();
     setSelectedBookReviews(reviews);
+    console.log("selectedBookReviews", selectedBookReviews);
   }
 
   const handleBookClick = async (book: Book) => {
@@ -46,11 +49,10 @@ export const Home = ({ user }: { user: User }) => {
   };
 
   const handleReviewSubmit = async () => {
-    console.log("comment", comment);
     if (!selectedBook?._id) return;
     await api.addNewComment(selectedBook._id, comment);
-    fetchBooks();
     await fetchReviewByBookId(selectedBook._id);
+    fetchBooks();
   };
 
   const handleUpdateReview = async () => {
@@ -60,6 +62,13 @@ export const Home = ({ user }: { user: User }) => {
     await fetchReviewByBookId(selectedBook!._id);
     setEditedReview(null);
   };
+
+  const handleEditBook = async () => {
+    if (!editedBook?._id) return;
+    await api.updateBook(editedBook._id, editedBook);
+    fetchBooks();
+    setEditedBook(null);
+  }
 
   return (
     <div className="home-container" style={{ marginTop: "-100px" }}>
@@ -97,14 +106,20 @@ export const Home = ({ user }: { user: User }) => {
         onHide={handleCloseModal}
         className="custom-modal"
       >
-        <Modal.Header closeButton className="bg-dark text-white">
-          <Modal.Title>{selectedBook?.name}</Modal.Title>
-        </Modal.Header>
+       <Modal.Header closeButton className="bg-dark text-white">
+  <Modal.Title>{selectedBook?.name}</Modal.Title>
+  {user?._id === selectedBook?.author && (
+    <Button onClick={() => setEditedBook(selectedBook)}>
+      Edit Book
+    </Button>
+  )}
+</Modal.Header>
+
         <Modal.Body className="bg-dark text-white">
           <div className="row">
             <div className="col-md-6">
               <img
-                src={selectedBook?.image}
+                src={`${BASE_URL}/static/books/${selectedBook?.image}`}
                 alt={selectedBook?.name}
                 style={{ width: "100%", height: "auto", borderRadius: "4px" }}
               />
@@ -120,6 +135,7 @@ export const Home = ({ user }: { user: User }) => {
               <p>Category: {selectedBook?.category}</p>
               <p>Summary: {selectedBook?.summary}</p>
             </div>
+              
             <div className="comment-input-form">
               <h4>Comments</h4>
               <div className="reviews-container">
@@ -163,7 +179,6 @@ export const Home = ({ user }: { user: User }) => {
                         text: e.target.value,
                       }))
                     }
-                    // You can use state to handle the new comment input
                   />
                   <Button variant="primary" onClick={handleUpdateReview}>
                     Update
@@ -187,6 +202,13 @@ export const Home = ({ user }: { user: User }) => {
           </div>
         </Modal.Body>
         <Modal.Footer className="bg-dark text-white">
+        <div>
+          {user?._id === selectedBook?._id && (
+             <Button variant="primary" onClick={handleEditBook}>
+             Update
+           </Button>
+              )}
+              </div>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
           </Button>
@@ -195,3 +217,5 @@ export const Home = ({ user }: { user: User }) => {
     </div>
   );
 };
+
+

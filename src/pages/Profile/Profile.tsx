@@ -100,23 +100,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     setShowUpdateForm(false);
     setUser(updatedUser);
   };
-  const handleBookEdit = (bookId: string) => {
-    // Redirect to book editing page or open a modal for book editing
-    console.log("Edit book with ID:", bookId);
-  };
-
-  const handleBookDelete = async (bookId: string) => {
-    try {
-      await api.deleteBook(bookId);
-      const updatedBooks = profileBooks.filter((book) => book._id !== bookId);
-      setProfileBooks(updatedBooks);
-    } catch (error) {
-      console.error("Error deleting book:", error);
-    }
-  };
-
-
-
+ 
   return (
     <div className="user-profile-container">
       <h1 style={{ paddingBottom: "40px" }}>My Profile</h1>
@@ -142,10 +126,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                       alt="Book Cover"
                       style={{ width: "150px", height: "200px", borderRadius: "4px" }}
                       className="book-image"
-                      onClick={() => handleBookEdit(book._id)}
                     />
-                    <button onClick={() => handleBookEdit(book._id)}>Edit</button>
-                    <button onClick={() => handleBookDelete(book._id)}>Delete</button>
                   </div>
                 ))}
               </div>

@@ -1,4 +1,5 @@
 import { ACCESS_TOKEN_KEY, BASE_URL } from "../constants";
+import { Book } from "../types";
 import apiClient from './api-client';
 import decodeToken from './auth';
 
@@ -93,6 +94,18 @@ const deleteBook = (bookId: string) => {
   });
 }
 
+const updateBook = (bookId: string, bookData: Book) => {
+  return new Promise((resolve, reject) => {
+      apiClient.put(`/book/updateOwnBook/${bookId}`, bookData, { headers: { Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}` } })
+          .then((response) => {
+              resolve(response.data);
+          })
+          .catch((error) => {
+              reject(error);
+          });
+  });
+}
+
 export const api = {
   addNewComment,
   getReviewsByBookId,
@@ -100,5 +113,6 @@ export const api = {
   updateUserProfile,
   getUserBooks,
   getBookById,
-  deleteBook
+  deleteBook,
+  updateBook,
 };
