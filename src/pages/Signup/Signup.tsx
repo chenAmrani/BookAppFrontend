@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Role, User } from "../../types";
 import { BASE_URL } from "../../constants";
-import { googleSignin } from "../../utilities/googleSignIn";
+import { googleSignin} from "../../utilities/googleSignIn";
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 
@@ -57,12 +57,11 @@ import { useNavigate } from "react-router-dom";
       console.log(credentialResponse);
       try {
         const res = await googleSignin(credentialResponse);
-        
+        console.log("the res is: ", res);
+        if (res == null) return;
+        localStorage.setItem("accessToken", res.accessToken as string);
+        localStorage.setItem("refreshToken", res.refreshToken as string);
         const userData = res;
-        if (!userData) return;
-        const userImage = res.image;
-        console.log("userImage: ", userImage);
-        
         setUser(userData);
         console.log("the res is: ", res);
         navigate("/");
@@ -136,3 +135,5 @@ import { useNavigate } from "react-router-dom";
     </div>
   );
 }
+
+

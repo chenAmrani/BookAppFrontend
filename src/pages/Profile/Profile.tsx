@@ -3,16 +3,12 @@ import { Book, User } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
 import { api } from "../../utilities/api";
-// import { getUserBooks , getBookById} from "../../utilities/books";
-// import { ObjectId } from "mongoose";
-// import { getUserBooks } from "../../utilities/books";
+
 interface UserProfileProps {
   user: User;
   setUser: (user: User) => void;
 }
 
-// const res = await getUserBooks();
-// console.log("the profile books", res.myBooks);
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
@@ -26,7 +22,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     const fetchProfileBooks = async () => {
       try {
         const res = await api.getUserBooks();
-        console.log("the profile books", res.myBooks);
+        // console.log("the profile books", res.myBooks);
        
 
         const bookPromises = res.myBooks.map(async (bookId: string) => {
@@ -65,6 +61,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0];
+      console.log("the file", file);
       setUpdatedImage(file);
     }
   };
@@ -86,11 +83,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     }
 
     if (updatedImage) {
+      console.log("Updated Image:", updatedImage);
       formData.append("image", updatedImage);
     }
 
     formData.append("id", user?._id || "");
-
     const response = await api.updateUserProfile(formData);
 
     const updatedUser = await response.json();

@@ -11,7 +11,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  //לבדוק לגבי שני אלו
+  
   useEffect(() => {
     console.log(loggedIn);
   }, [loggedIn]);
