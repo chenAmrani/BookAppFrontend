@@ -106,6 +106,20 @@ const updateBook = (bookId: string, bookData: Book) => {
   });
 }
 
+const updateUserImage = (image: File) => {
+  return new Promise<string>((resolve, reject) => {
+      const formData = new FormData();
+      formData.append('avatar', image);
+      apiClient.post('/static/uploads',formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+          .then((response) => {
+              resolve(response.data);
+          })
+          .catch((error) => {
+              reject(error);
+          });
+  });
+}
+
 export const api = {
   addNewComment,
   getReviewsByBookId,
@@ -115,4 +129,5 @@ export const api = {
   getBookById,
   deleteBook,
   updateBook,
+  updateUserImage
 };
