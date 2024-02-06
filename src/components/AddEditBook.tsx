@@ -2,6 +2,8 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { Book } from "../types";
 import { useRef, useState } from "react";
 import apiClient from "../utilities/api-client";
+import decodeToken from "../utilities/auth";
+import { api } from "../utilities/api";
 
 export const AddEditBook = ({
   onClose,
@@ -13,6 +15,7 @@ export const AddEditBook = ({
   selectedBook?: Book;
 }) => {
   const isEditing = Boolean(selectedBook);
+  console.log("selectedBook handel", selectedBook);
 
   const [name, setName] = useState(selectedBook?.name || "");
   const [year, setYear] = useState(selectedBook?.year || "");
@@ -31,6 +34,7 @@ export const AddEditBook = ({
     }
 
     const image = imageRef.current!.files![0];
+    const token = localStorage.getItem("accessToken");
 
     const formData = new FormData();
     formData.append("name", name);
@@ -41,9 +45,12 @@ export const AddEditBook = ({
     formData.append("category", category);
     formData.append("summary", summary);
     formData.append("image", image);
+    console.log("image update book", image);
+    formData.append("author", decodeToken(token!)._id);
 
-    const token = localStorage.getItem("accessToken");
+ 
 
+    if(!selectedBook){
     const response = await apiClient.post("/book", formData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -51,6 +58,17 @@ export const AddEditBook = ({
     if (response.status !== 201) {
       return alert("Failed to add book");
     }
+  }
+
+
+  else {
+    api.updateBook(selectedBook._id, formData);
+    // console.log("we in the elese")
+    // const response = apiClient.put(`/book/updateOwnBook/${selectedBook._id}`, formData, {
+    //   headers: { Authorization: `Bearer ${token}` },
+    // });
+    // console.log("response", response);
+  }
 
     onClose();
   };

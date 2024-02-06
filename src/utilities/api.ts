@@ -1,8 +1,9 @@
 import { AxiosResponse } from "axios";
 import { ACCESS_TOKEN_KEY, BASE_URL, REFRESH_TOKEN_KEY } from "../constants";
-import { Book } from "../types";
 import apiClient from "./api-client";
 import decodeToken from "./auth";
+
+
 
 const makeRequest = async (request: () => Promise<AxiosResponse>) => {
   const response = await request();
@@ -78,6 +79,7 @@ const updateUserProfile = async (formData: FormData) => {
 };
 
 const getUserBooks = () => {
+  //לבדוק מה לשים בתוך הפרומיס
   return new Promise((resolve, reject) => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -121,10 +123,10 @@ const getBookById = (bookId: string) => {
   });
 };
 
-const deleteBook = (bookId: string) => {
+const deleteReview = (bookId: string) => {
   return new Promise((resolve, reject) => {
     apiClient
-      .delete(`/book/${bookId}`, {
+      .delete(`/review/${bookId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
         },
@@ -138,10 +140,23 @@ const deleteBook = (bookId: string) => {
   });
 };
 
-const updateBook = (bookId: string, bookData: Book) => {
+
+const updateBook = (bookId: string, bookData: FormData) => {
+
+  console.log("the image", bookData.get("image"))
+  const updateBook = {
+    name: bookData.get("name"),
+    summary: bookData.get("summary"),
+    year: bookData.get("year"),
+    pages: bookData.get("pages"),
+    price: bookData.get("price"),
+    rating: bookData.get("rating"),
+    category: bookData.get("category"),
+    author: bookData.get("author"),
+  }
   return new Promise((resolve, reject) => {
     apiClient
-      .put(`/book/updateOwnBook/${bookId}`, bookData, {
+      .put(`/book/updateOwnBook/${bookId}`, updateBook, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
         },
@@ -172,6 +187,27 @@ const updateUserImage = (image: File) => {
   });
 };
 
+const deleteBook = (bookId: string) => {
+  return new Promise((resolve, reject) => {
+    apiClient
+      .delete(`/book/${bookId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+    });
+  };  
+
+
+
+
+
 export const api = {
   addNewComment,
   getReviewsByBookId,
@@ -179,7 +215,9 @@ export const api = {
   updateUserProfile,
   getUserBooks,
   getBookById,
-  deleteBook,
+  deleteReview,
   updateBook,
   updateUserImage,
+  deleteBook
+  
 };
