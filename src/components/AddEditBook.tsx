@@ -1,7 +1,8 @@
 import { Button, Form, Modal } from "react-bootstrap";
-import { Book } from "../types";
+import { Book, User } from "../types";
 import { useRef, useState } from "react";
 import apiClient from "../utilities/api-client";
+// import { api } from "../utilities/api";
 import decodeToken from "../utilities/auth";
 import { api } from "../utilities/api";
 
@@ -48,9 +49,13 @@ export const AddEditBook = ({
     console.log("image update book", image);
     formData.append("author", decodeToken(token!)._id);
 
+    const userId = decodeToken(token!); 
+    const user = await api.getUserById(userId._id) as User;
+    console.log("user!!!", user);
  
 
     if(!selectedBook){
+      if(user?.role==="author"){
     const response = await apiClient.post("/book", formData, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -60,14 +65,26 @@ export const AddEditBook = ({
     }
   }
 
+  else if(user?.role==="admin"){
+    const response = await apiClient.post("/book/admin", formData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (response.status !== 201) {
+      return alert("Failed to add book");
+    }
+  }
+}
+
 
   else {
-    api.updateBook(selectedBook._id, formData);
-    // console.log("we in the elese")
-    // const response = apiClient.put(`/book/updateOwnBook/${selectedBook._id}`, formData, {
-    //   headers: { Authorization: `Bearer ${token}` },
-    // });
-    // console.log("response", response);
+    if(user?.role==="author"){
+      api.updateBookByAuthor(selectedBook._id, formData);
+    }
+      else if(user?.role==="admin"){
+        api.updateBookByAdmin(selectedBook._id, formData);
+      }
+
   }
 
     onClose();

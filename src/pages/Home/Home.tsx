@@ -11,9 +11,12 @@ import StarRating from "../../components/Navbar/starsRating";
 import { api } from "../../utilities/api";
 import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
-
 export const Home = ({ user }: { user: User }) => {
+
+
   const isAuthor = user?.role === "author";
+  const isAdmin = user?.role === "admin";
+
   const [books, setBooks] = useState<Book[]>([]);
   const [reviews, setReview] = useState<Review[]>([]);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
@@ -98,6 +101,7 @@ export const Home = ({ user }: { user: User }) => {
     console.log("book", book);
     setSelectedBookId(book._id);
     await api.deleteBook(book._id);
+
     setShowModal(false);
     fetchBooks();
   }
@@ -105,12 +109,13 @@ export const Home = ({ user }: { user: User }) => {
   const selectedBook = books.find((book) => book._id === selectedBookId);
 
   const selectedReview = reviews.find((review) => review._id === selectedReviewId);
+  console.log("selectedReview", selectedReview);
   
   
   return (
     <div className="home-container" style={{}}>
       <div>
-        {isAuthor && <Button onClick={handleAddBook}>Add a book</Button>}
+        {(isAuthor || isAdmin) && <Button onClick={handleAddBook}>Add a book</Button>}
       </div>
       <div className="row row-cols-3" style={{ marginTop: "80px" }}>
         {books.map((book) => (
@@ -176,6 +181,7 @@ export const Home = ({ user }: { user: User }) => {
               <div className="reviews-container">
                 {selectedBook?.reviews.map((review) => {
                   const reviewingUser = review.reviewerId;
+                  
                   return (
                     <div key={review._id} className="reviews-panel">
                       <div className="review-image">
@@ -190,16 +196,31 @@ export const Home = ({ user }: { user: User }) => {
                       </div>
                       <div style={{ flex: 1 }}></div>
                       <div>
-                        {user?._id === review.reviewerId._id && (
+                        {(user?._id === review.reviewerId._id || isAdmin) && (
                           <Button onClick={() => setEditedReview(review)}>
                             Edit
                           </Button>
                         )}
                       </div>
                       <div> 
-                      {user?._id === review.reviewerId._id && (
-                          <Button onClick={() => setDeleteReview(true)}>
+                      {(user?._id === review.reviewerId._id || isAdmin)&& (
+                      <Button onClick={() => setDeleteReview(true)}>
                             Delete
+                            <Modal show={deleteReview} onHide={() => setDeleteReview(false)}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Delete Review</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>Are you sure you want to delete this review?</Modal.Body>
+                             <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setDeleteReview(false)}>
+                         Cancel
+                  </Button>
+        
+                <Button variant="primary" onClick={() => handleDeleteReview(review!)}>
+                Delete
+                </Button>
+                </Modal.Footer>
+                </Modal>
                           </Button>
                         )}
                       </div>
@@ -241,10 +262,10 @@ export const Home = ({ user }: { user: User }) => {
         </Modal.Body>
         <Modal.Footer className="bg-dark text-white">
           <div>
-          {isAuthor &&<Button onClick={() => handleEditBook(selectedBook!)}>Edit</Button>}
+          {(user?._id === selectedBook?.author|| isAdmin) &&<Button onClick={() => handleEditBook(selectedBook!)}>Edit</Button>}
           </div>
           <div>
-          {isAuthor &&<Button onClick={() => handleDeleteBook(selectedBook!)}>Delete</Button>}
+          {(user?._id === selectedBook?.author|| isAdmin) &&<Button onClick={() => handleDeleteBook(selectedBook!)}>Delete</Button>}
           </div>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
@@ -253,22 +274,6 @@ export const Home = ({ user }: { user: User }) => {
       </Modal>
 
       <AddEditBook onClose={closeAddEditBook} show={showAddEditBook} selectedBook={selectedBook}/>
-      
-    <Modal show={deleteReview} onHide={() => setDeleteReview(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>Delete Review</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>Are you sure you want to delete this review?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setDeleteReview(false)}>
-          Cancel
-        </Button>
-      <Button variant="primary" onClick={() => handleDeleteReview(selectedReview!)}>
-      Delete
-    </Button>
-  </Modal.Footer>
-</Modal>
-
     </div>
 
 

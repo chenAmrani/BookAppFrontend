@@ -141,7 +141,7 @@ const deleteReview = (bookId: string) => {
 };
 
 
-const updateBook = (bookId: string, bookData: FormData) => {
+const updateBookByAuthor = (bookId: string, bookData: FormData) => {
 
   console.log("the image", bookData.get("image"))
   const updateBook = {
@@ -157,6 +157,35 @@ const updateBook = (bookId: string, bookData: FormData) => {
   return new Promise((resolve, reject) => {
     apiClient
       .put(`/book/updateOwnBook/${bookId}`, updateBook, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+        },
+      })
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+};
+
+const updateBookByAdmin = (bookId: string, bookData: FormData) => {
+
+  console.log("the image", bookData.get("image"))
+  const updateBook = {
+    name: bookData.get("name"),
+    summary: bookData.get("summary"),
+    year: bookData.get("year"),
+    pages: bookData.get("pages"),
+    price: bookData.get("price"),
+    rating: bookData.get("rating"),
+    category: bookData.get("category"),
+    author: bookData.get("author"),
+  }
+  return new Promise((resolve, reject) => {
+    apiClient
+      .put(`/book/admin/update/${bookId}`, updateBook, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
         },
@@ -204,6 +233,23 @@ const deleteBook = (bookId: string) => {
     });
   };  
 
+  const getUserById = (userId: string) => {
+    return new Promise((resolve, reject) => {
+      apiClient
+        .get(`/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }
+  )};
+
 
 
 
@@ -216,8 +262,10 @@ export const api = {
   getUserBooks,
   getBookById,
   deleteReview,
-  updateBook,
+  updateBookByAdmin,
+  updateBookByAuthor,
   updateUserImage,
-  deleteBook
+  deleteBook,
+  getUserById
   
 };
