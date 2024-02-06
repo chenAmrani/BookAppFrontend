@@ -1,6 +1,6 @@
 import { /*React*/ useEffect, useState } from "react";
 import { BASE_URL} from "../../constants";
-import { Book /*Review*/, Review, User } from "../../types";
+import { Book /*Review*/, Review, User, UserData } from "../../types";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,19 +13,21 @@ import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
 
 export const Home = ({ user }: { user: User }) => {
-  console.log("user", user);
   const isAuthor = user?.role === "author";
   const [books, setBooks] = useState<Book[]>([]);
+  const [reviews, setReview] = useState<Review[]>([]);
   const [selectedBookId, setSelectedBookId] = useState<string | null>(null);
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
   const [comment, setComment] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editedReview, setEditedReview] = useState<Review | null>(null);
-  // const [editedBookId, setEditedBookId] = useState<string | null>(null);
   const [showAddEditBook, setShowAddEditBook] = useState(false);
+  const [deleteReview, setDeleteReview] = useState(false);
 
   const closeAddEditBook = () => {
-    setShowAddEditBook(false);
     fetchBooks();
+    setShowAddEditBook(false);
+    
   };
 
   function fetchBooks() {
@@ -36,6 +38,14 @@ export const Home = ({ user }: { user: User }) => {
       });
   }
 
+  function fetchReviews() {
+    fetch(`${BASE_URL}/review`)
+      .then((res) => res.json())
+      .then((data) => {
+        setReview(data);
+      });
+  } 
+
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -45,8 +55,10 @@ export const Home = ({ user }: { user: User }) => {
     setShowModal(true);
   };
 
+
   const handleCloseModal = () => {
     setShowModal(false);
+    fetchBooks();
   };
 
   const handleReviewSubmit = async () => {
@@ -62,19 +74,39 @@ export const Home = ({ user }: { user: User }) => {
     setEditedReview(null);
   };
 
-  // const handleEditBook = async () => {
-  //   if (!editedBookId?._id) return;
-  //   await api.updateBook(editedBookId._id, editedBookId);
-  //   fetchBooks();
-  //   setEditedBookId(null);
-  // };
-
-  const handleAddBook = async () => {
+  const handleEditBook = async (book: Book) => {
+    setSelectedBookId(book._id);
     setShowAddEditBook(true);
   };
 
+  const handleAddBook = async () => {
+    setSelectedBookId(null);
+    setShowAddEditBook(true);
+  };
+
+  const handleDeleteReview = async (review: Review) => {
+    setSelectedReviewId(review._id);
+    console.log("review", review);
+    const response = await api.deleteReview(review._id);
+    console.log("response", response);
+    setDeleteReview(false);
+    fetchBooks();
+    fetchReviews();
+  }
+
+  const handleDeleteBook = async (book: Book) => {
+    console.log("book", book);
+    setSelectedBookId(book._id);
+    await api.deleteBook(book._id);
+    setShowModal(false);
+    fetchBooks();
+  }
+
   const selectedBook = books.find((book) => book._id === selectedBookId);
 
+  const selectedReview = reviews.find((review) => review._id === selectedReviewId);
+  
+  
   return (
     <div className="home-container" style={{}}>
       <div>
@@ -116,11 +148,6 @@ export const Home = ({ user }: { user: User }) => {
       >
         <Modal.Header closeButton className="bg-dark text-white">
           <Modal.Title>{selectedBook?.name}</Modal.Title>
-          {/* {user?._id === selectedBook?.author && (
-            <Button onClick={() => setEditedBookId(selectedBookId!)}>
-              Edit Book
-            </Button>
-          )} */}
         </Modal.Header>
 
         <Modal.Body className="bg-dark text-white">
@@ -149,11 +176,10 @@ export const Home = ({ user }: { user: User }) => {
               <div className="reviews-container">
                 {selectedBook?.reviews.map((review) => {
                   const reviewingUser = review.reviewerId;
-                  console.log("review", review);
                   return (
                     <div key={review._id} className="reviews-panel">
                       <div className="review-image">
-                        <img src={getUserImage(reviewingUser)} alt="avatar" />
+                        <img src={getUserImage(reviewingUser as UserData)} alt="avatar" />
                       </div>
                       <div>
                         <div className="comment-details">
@@ -167,6 +193,13 @@ export const Home = ({ user }: { user: User }) => {
                         {user?._id === review.reviewerId._id && (
                           <Button onClick={() => setEditedReview(review)}>
                             Edit
+                          </Button>
+                        )}
+                      </div>
+                      <div> 
+                      {user?._id === review.reviewerId._id && (
+                          <Button onClick={() => setDeleteReview(true)}>
+                            Delete
                           </Button>
                         )}
                       </div>
@@ -197,7 +230,6 @@ export const Home = ({ user }: { user: User }) => {
                     rows={3}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                    // You can use state to handle the new comment input
                   />
                   <Button variant="primary" onClick={handleReviewSubmit}>
                     Comment
@@ -209,11 +241,10 @@ export const Home = ({ user }: { user: User }) => {
         </Modal.Body>
         <Modal.Footer className="bg-dark text-white">
           <div>
-            {/* {user?._id === selectedBook?.author && (
-              <Button variant="primary" onClick={handleEditBook}>
-                Update
-              </Button>
-            )} */}
+          {isAuthor &&<Button onClick={() => handleEditBook(selectedBook!)}>Edit</Button>}
+          </div>
+          <div>
+          {isAuthor &&<Button onClick={() => handleDeleteBook(selectedBook!)}>Delete</Button>}
           </div>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
@@ -221,7 +252,25 @@ export const Home = ({ user }: { user: User }) => {
         </Modal.Footer>
       </Modal>
 
-      <AddEditBook onClose={closeAddEditBook} show={showAddEditBook} />
+      <AddEditBook onClose={closeAddEditBook} show={showAddEditBook} selectedBook={selectedBook}/>
+      
+    <Modal show={deleteReview} onHide={() => setDeleteReview(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Delete Review</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Are you sure you want to delete this review?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setDeleteReview(false)}>
+          Cancel
+        </Button>
+      <Button variant="primary" onClick={() => handleDeleteReview(selectedReview!)}>
+      Delete
+    </Button>
+  </Modal.Footer>
+</Modal>
+
     </div>
+
+
   );
 };
