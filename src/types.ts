@@ -1,4 +1,4 @@
-export type Role = "reader" | "author";
+export type Role = "reader" | "author" | "admin";
 
 export interface Book {
   author: string;
