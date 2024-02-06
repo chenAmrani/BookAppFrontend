@@ -8,7 +8,7 @@ export interface Book {
   pages: number;
   price: number;
   rating: number;
-  reviews: Review[] | undefined;
+  reviews: Review[];
   summary: string;
   year: number;
   _id: string;
@@ -19,11 +19,10 @@ export interface UserData {
   books: Book[];
   email: string;
   name: string;
-  accessToken?: string,
-  refreshToken?: string
+  accessToken?: string;
   role: Role;
   _id: string;
-
+  isGoogleSsoUser: boolean;
 }
 
 export interface Review {
