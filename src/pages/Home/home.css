@@ -40,8 +40,40 @@
       }
     }
 
+    .book-grid-container{
+      display: grid;
+      height: 50rem;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas: 'one two four' 'one two four-low';
+      gap: 1.3rem;
+      margin-top: 1.3rem;
+    }
 
- 
+    .book-grid-item{
+      display: grid;
+      height: 50rem;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas: 'one two four' 'one two four-low';
+      gap: 1.3rem;
+      margin-top: 1.3rem;
+    }
+    .home-container{
+      display: grid;
+      height: 50rem;
+      grid-template-columns: 2fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas: 'one two four' 'one two four-low';
+      gap: 1.3rem;
+      margin-top: 1.3rem;
+    }
+
+
+
+   
+
+   
  
   }
 }
