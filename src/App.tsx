@@ -12,8 +12,8 @@ function App() {
   const [user, setUser] = useState<User | null>(null);
 
   return (
-    <div className="App">
-      <Navbar user={user} setUser={setUser} googleSignIn={false} /> 
+    <div className="App bg-dark">
+      <Navbar user={user} setUser={setUser} googleSignIn={false} />
       <main>
         <Routes>
           <Route path="/" element={<Home user={user} />} />
