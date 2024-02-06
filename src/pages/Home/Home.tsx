@@ -1,5 +1,5 @@
 import { /*React*/ useEffect, useState } from "react";
-import { BASE_URL, STATIC_ASSETS_URL } from "../../constants";
+import { BASE_URL} from "../../constants";
 import { Book /*Review*/, Review, User } from "../../types";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -20,7 +20,7 @@ export const Home = ({ user }: { user: User }) => {
   const [comment, setComment] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editedReview, setEditedReview] = useState<Review | null>(null);
-  const [editedBookId, setEditedBookId] = useState<string | null>(null);
+  // const [editedBookId, setEditedBookId] = useState<string | null>(null);
   const [showAddEditBook, setShowAddEditBook] = useState(false);
 
   const closeAddEditBook = () => {
@@ -62,12 +62,12 @@ export const Home = ({ user }: { user: User }) => {
     setEditedReview(null);
   };
 
-  const handleEditBook = async () => {
-    if (!editedBookId?._id) return;
-    await api.updateBook(editedBookId._id, editedBookId);
-    fetchBooks();
-    setEditedBookId(null);
-  };
+  // const handleEditBook = async () => {
+  //   if (!editedBookId?._id) return;
+  //   await api.updateBook(editedBookId._id, editedBookId);
+  //   fetchBooks();
+  //   setEditedBookId(null);
+  // };
 
   const handleAddBook = async () => {
     setShowAddEditBook(true);
@@ -116,11 +116,11 @@ export const Home = ({ user }: { user: User }) => {
       >
         <Modal.Header closeButton className="bg-dark text-white">
           <Modal.Title>{selectedBook?.name}</Modal.Title>
-          {user?._id === selectedBook?.author && (
+          {/* {user?._id === selectedBook?.author && (
             <Button onClick={() => setEditedBookId(selectedBookId!)}>
               Edit Book
             </Button>
-          )}
+          )} */}
         </Modal.Header>
 
         <Modal.Body className="bg-dark text-white">
@@ -209,11 +209,11 @@ export const Home = ({ user }: { user: User }) => {
         </Modal.Body>
         <Modal.Footer className="bg-dark text-white">
           <div>
-            {user?._id === selectedBook?.author && (
+            {/* {user?._id === selectedBook?.author && (
               <Button variant="primary" onClick={handleEditBook}>
                 Update
               </Button>
-            )}
+            )} */}
           </div>
           <Button variant="secondary" onClick={handleCloseModal}>
             Close
