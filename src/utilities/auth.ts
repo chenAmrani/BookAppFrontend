@@ -23,7 +23,7 @@ const decodeToken = (token: string) => {
 
 export default decodeToken;
 
-export function getUserImage(user: UserData): string | undefined {
+export function getUserImage(user: UserData) {
   return user.isGoogleSsoUser
     ? user.image
     : `${BASE_URL}/static/uploads/${user.image}`;

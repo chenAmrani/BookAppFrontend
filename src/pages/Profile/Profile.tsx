@@ -17,13 +17,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
+  const [profileUsers, setProfileUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
       try {
-        const res = await api.getUserBooks();
-        // console.log("the profile books", res.myBooks);
-
+        const res = await api.getUserBooks() as { myBooks: string[] };
         const bookPromises = res.myBooks.map(async (bookId: string) => {
           try {
             const book = await api.getBookById(bookId);
@@ -37,7 +36,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
 
         const books = await Promise.all(bookPromises);
         console.log("the books", books);
-        setProfileBooks(books);
+        setProfileBooks(books as Book[]);
       } catch (error) {
         console.error("Error fetching profile books:", error);
       }
@@ -45,6 +44,39 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
 
     fetchProfileBooks();
   }, []);
+
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      try {
+        const res = await api.getAllUsers() as { users: User[] }; 
+        console.log("the res!!", res);
+        
+        // Create an object to map users by their IDs
+        const usersById: { [key: string]: User } = {};
+        res.users.forEach(user => {
+          usersById[user!._id] = user;
+        });
+
+        const usersArray = Object.values(usersById);
+        setProfileUsers(usersArray);
+      } catch (error) {
+        console.error("Error fetching all users:", error);
+      }
+    };
+  
+    fetchAllUsers();
+  }, []);
+  
+  const handleDeleteUserByAdmin = async (userId: string | undefined) => {
+    if (userId) {
+      const response = await api.deleteUserByAdmin(userId);
+      console.log("Delete User Response:", response);
+      const updatedUsers = profileUsers.filter(user => user?._id !== userId);
+      setProfileUsers(updatedUsers);
+    }
+  };
+
 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -127,6 +159,47 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
             </div>
           </div>
         )}
+
+{(user.role === "admin" && profileUsers.length > 0) && (
+  <div className="user-user-section">
+    <h2>All Users</h2>
+    <table className="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Image</th>
+          <th>Action</th> {/* New column for delete button */}
+        </tr>
+      </thead>
+      <tbody>
+        {profileUsers.map((user) => (
+          <tr key={user?._id}>
+            <td>{user?.name}</td>
+            <td>{user?.email}</td>
+            <td>{user?.role}</td>
+            <td>
+              <img
+                src={getUserImage(user!)} alt="User Avatar"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  borderRadius: "4px",
+                }}
+                className="user-image"
+              />
+            </td>
+            <td>
+              <button onClick={() => handleDeleteUserByAdmin(user?._id)}>Delete</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
         <button onClick={handleUpdateClick}>Update Details</button>
 
         {showUpdateForm && (
@@ -174,7 +247,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </form>
         )}
       </>
-      )
+      
     </div>
   );
 };

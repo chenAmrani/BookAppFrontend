@@ -48,3 +48,21 @@
   height: auto;
   border-radius: 8px; /* Adjust the border radius as needed */
 }
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.user-table th {
+  background-color: #f2f2f2;
+}
+
+.user-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
