@@ -168,6 +168,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
         <tr>
           <th>Name</th>
           <th>Email</th>
+          <th>Role</th>
           <th>Image</th>
           <th>Action</th> {/* New column for delete button */}
         </tr>
@@ -177,10 +178,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           <tr key={user?._id}>
             <td>{user?.name}</td>
             <td>{user?.email}</td>
+            <td>{user?.role}</td>
             <td>
               <img
-                src={`${BASE_URL}/static/uploads/${user?.image}`}
-                alt="User Cover"
+                src={getUserImage(user!)} alt="User Avatar"
                 style={{
                   width: "100px",
                   height: "100px",
