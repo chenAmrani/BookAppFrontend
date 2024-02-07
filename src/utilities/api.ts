@@ -251,6 +251,42 @@ const deleteBook = (bookId: string) => {
   )};
 
 
+  const getAllUsers = () => {
+    return new Promise((resolve, reject) => {
+      apiClient
+        .get(`/user`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+          console.log("the response all users!!", response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }
+  )};
+
+  const deleteUserByAdmin = (userId: string) => {
+    return new Promise((resolve, reject) => {
+      apiClient
+        .delete(`/user/delete/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+          },
+        })
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+      }
+    )};
+
+
 
 
 
@@ -266,6 +302,8 @@ export const api = {
   updateBookByAuthor,
   updateUserImage,
   deleteBook,
-  getUserById
+  getUserById,
+  getAllUsers,
+  deleteUserByAdmin
   
 };
