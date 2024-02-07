@@ -76,7 +76,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
       setProfileUsers(updatedUsers);
     }
   };
-
+const handleDeleteAccount = async (userId: string) => {
+  const response = await api.deleteUser(userId);
+  console.log("Delete User Response:", response);
+  setUser(null);
+}
 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -158,7 +162,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
               ))}
             </div>
           </div>
+          
         )}
+           <div>
+              <button onClick={()=> handleDeleteAccount(user?._id)}>Delete my account</button>
+        </div>
 
 {(user.role === "admin" && profileUsers.length > 0) && (
   <div className="user-user-section">
@@ -192,15 +200,19 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
             </td>
             <td>
               <button onClick={() => handleDeleteUserByAdmin(user?._id)}>Delete</button>
+           
             </td>
           </tr>
+          
         ))}
       </tbody>
     </table>
   </div>
 )}
-
+        <div>
         <button onClick={handleUpdateClick}>Update Details</button>
+        </div>
+        
 
         {showUpdateForm && (
           <form onSubmit={handleUpdateSubmit}>

@@ -286,6 +286,24 @@ const deleteBook = (bookId: string) => {
       }
     )};
 
+    const deleteUser = (userId: string) => {
+      return new Promise((resolve, reject) => {
+        apiClient
+          .delete(`/user/deleteMyOwnUser/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem(ACCESS_TOKEN_KEY)}`,
+            },
+          })
+          .then((response) => {
+            resolve(response.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+        }
+      )}
+
+
 
 
 
@@ -304,6 +322,7 @@ export const api = {
   deleteBook,
   getUserById,
   getAllUsers,
-  deleteUserByAdmin
+  deleteUserByAdmin,
+  deleteUser
   
 };
