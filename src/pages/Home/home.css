@@ -82,13 +82,15 @@
     
     .book-card {
       width: 100%;
-      background-color: black; /* Set the background color to black */
+      background-color: rgb(249, 249, 249); /* Set the background color to black */
       color: white; /* Set text color to white */
     }
 
-   
+ 
+    
+    
+    
 
-   
  
   }
 }

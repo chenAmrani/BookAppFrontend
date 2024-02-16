@@ -111,16 +111,31 @@ export const Home = ({ user }: { user: User }) => {
   console.log("selectedReview", selectedReview);
 
   return (
-    <div className="home-container" style={{}}>
+    <div className="home-container">
       <div>
         {(isAuthor || isAdmin) && (
           <Button onClick={handleAddBook}>Add a book</Button>
         )}
       </div>
-      <div className="book-grid-container">
+      <div className="book-grid-container"
+      style={{
+        display:"grid",
+         gridTemplateColumns: "repeat(3, 1fr)",
+          gridRowGap: "40px",
+          gridColumnGap: "40px",
+         gap: "40px",
+        
+      }}
+      >
         {books.map((book) => (
-          <div key={book._id} className="book-grid-item">
-            
+          <div key={book._id} className="book-grid-item"
+          style={{
+            display:"grid",
+             gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+             msGridColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+          }}
+          >
+          
             <Card
              className="book-card"
               onClick={() => handleBookClick(book)}
@@ -128,6 +143,7 @@ export const Home = ({ user }: { user: User }) => {
                 backgroundColor: "white",
                 boxShadow: "0 5px 2px rgba(0, 0, 0, 5.1)",
                 borderRadius: "6px",
+                
               }}
             >
               <Card.Img className="book-image"
@@ -135,7 +151,7 @@ export const Home = ({ user }: { user: User }) => {
                 src={`${BASE_URL}/static/books/${book.image}`}
                 alt={book.name}
                 style={{
-                  width: "100%",
+                  width: "220px",
                   height: "270px",
                   borderRadius: "2px",
                 }}
