@@ -1,18 +1,20 @@
+
+
 .profile-page{
   width:100;
   margin:auto;
   margin-top: 80px;
   text-align: center ;
 }
-/* UserProfile.css */
+
 
 .user-profile-container {
   background-color: rgb(192, 186, 186);
-  color: white;
-  width: 50%;
-  max-width: 800px; /* Adjust the maximum width as needed */
+  color: black;
+  width: 100%;
+  max-width: 100%; 
   margin: 0 auto;
-  padding: 40px; /* Adjust the padding as needed */
+  padding: 40px; 
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -20,6 +22,7 @@
 
 .user-profile-container {
   text-align: center;
+ 
 }
 
 .user-profile-container h1 {
@@ -44,9 +47,9 @@
 }
 
 .book-image {
-  width: 150px; /* Adjust image width as needed */
+  width: 150px; 
   height: auto;
-  border-radius: 8px; /* Adjust the border radius as needed */
+  border-radius: 8px; 
 }
 
 .user-table {
@@ -55,14 +58,25 @@
 }
 
 .user-table th, .user-table td {
-  border: 1px solid #ddd;
+  border: 1px solid #0c0c0c;
   padding: 8px;
 }
 
 .user-table th {
-  background-color: #f2f2f2;
+  background-color: #4a4747;
 }
 
-.user-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+
+
+.Delete-User-Btn{
+  background-color: rgb(250, 38, 38);
+  padding:8px;
+  border-radius: 15px;
 }
+
+.Update-User-Btn{
+  background-color: rgb(38, 250, 38);
+  padding:8px;
+  border-radius: 15px;
+}
+

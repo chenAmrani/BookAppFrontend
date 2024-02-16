@@ -12,9 +12,14 @@ export function Navbar({
   setUser: (user: User | null) => void;
   googleSignIn: boolean;
 }) {
+
+  
+
+     
+      
   return (
     <>
-      <BootstrapNavbar bg="dark" data-bs-theme="dark" >
+      <BootstrapNavbar bg="dark" data-bs-theme="dark"  >
         <Container>
           <BootstrapNavbar.Brand>
             <Link to='/'><img
@@ -35,6 +40,7 @@ export function Navbar({
               Profile
               </Link>
               </>
+              
             ) : (
               <>
                 <Link className="nav-link" to="login">
@@ -46,6 +52,9 @@ export function Navbar({
                 </Link>
               </>
             )}
+
+          
+            
           </Nav>
         </Container>
       </BootstrapNavbar>

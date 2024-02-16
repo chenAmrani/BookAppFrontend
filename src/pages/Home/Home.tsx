@@ -67,6 +67,7 @@ export const Home = ({ user }: { user: User }) => {
     if (!selectedBookId) return;
     await api.addNewComment(selectedBookId, comment);
     fetchBooks();
+    setComment("");
   };
 
   const handleUpdateReview = async () => {
@@ -111,23 +112,40 @@ export const Home = ({ user }: { user: User }) => {
   console.log("selectedReview", selectedReview);
 
   return (
-    <div className="home-container" style={{}}>
+    <div className="home-container">
       <div>
         {(isAuthor || isAdmin) && (
-          <Button onClick={handleAddBook}>Add a book</Button>
+          <Button onClick={handleAddBook} style={{marginTop:"20px" , backgroundColor:"rgb(255, 228, 200)" , borderColor:"rgb(255, 228, 200)" , color:"black"}}>Add a book</Button>
         )}
       </div>
-      <div className="book-grid-container">
+      <div className="book-grid-container"
+      style={{
+        marginTop:"100px",
+        display:"grid",
+         gridTemplateColumns: "repeat(3, 1fr)",
+          gridRowGap: "40px",
+          gridColumnGap: "40px",
+         gap: "40px",
+        
+      }}
+      >
         {books.map((book) => (
-          <div key={book._id} className="book-grid-item">
-            
+          <div key={book._id} className="book-grid-item"
+          style={{
+            display:"grid",
+             gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+             msGridColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+          }}
+          >
+          
             <Card
              className="book-card"
               onClick={() => handleBookClick(book)}
               style={{
-                backgroundColor: "white",
-                boxShadow: "0 5px 2px rgba(0, 0, 0, 5.1)",
-                borderRadius: "6px",
+                backgroundColor: "rgba(0, 0, 0, 0.8)", // Adjust the last parameter (0.5) for the desired darkness
+                color: "white",
+                boxShadow: "0 5px 2px rgba(0, 0, 0, 0.5)",
+                borderRadius: "18px",
               }}
             >
               <Card.Img className="book-image"
@@ -135,9 +153,9 @@ export const Home = ({ user }: { user: User }) => {
                 src={`${BASE_URL}/static/books/${book.image}`}
                 alt={book.name}
                 style={{
-                  width: "100%",
+                  width: "220px",
                   height: "270px",
-                  borderRadius: "2px",
+                  borderRadius: "18px",
                 }}
               />
               <Card.Body style={{ boxShadow: "revert" }}>
@@ -183,21 +201,22 @@ export const Home = ({ user }: { user: User }) => {
             </div>
 
             <div className="comment-input-form">
-              <h4>Comments</h4>
-              <div className="reviews-container">
+              <h4 style={{marginTop:"25px" , marginBottom:"25px"}}>Comments</h4>
+              <div className="reviews-container" >
                 {selectedBook?.reviews.map((review) => {
                   const reviewingUser = review.reviewerId;
 
                   return (
-                    <div key={review._id} className="reviews-panel">
+                    <div key={review._id} className="reviews-panel" >
                       <div className="review-image">
                         <img
                           src={getUserImage(reviewingUser as UserData)}
                           alt="avatar"
+                          style={{height:"50px", width:"50px", borderRadius:"50px"}}
                         />
                       </div>
-                      <div>
-                        <div className="comment-details">
+                      <div >
+                        <div className="comment-details" >
                           <p className="name">{review.reviewerId.name}</p>
                           <p className="review"> {review.text}</p>
                           <p className="date"> {review.updatedAt}</p>
@@ -206,15 +225,15 @@ export const Home = ({ user }: { user: User }) => {
                       <div style={{ flex: 1 }}></div>
                       <div>
                         {(user?._id === review.reviewerId._id || isAdmin) && (
-                          <Button onClick={() => setEditedReview(review)}>
-                            Edit
+                          <Button style={{backgroundColor:"rgb(216, 216, 216)", borderColor:"rgb(216, 216, 216)", color:"black"}} onClick={() => setEditedReview(review)}>
+                            <i className="bi bi-pencil-square" ></i> 
                           </Button>
                         )}
                       </div>
                       <div>
                         {(user?._id === review.reviewerId._id || isAdmin) && (
-                          <Button onClick={() => setDeleteReview(true)}>
-                            Delete
+                          <Button style={{backgroundColor:"rgb(216, 216, 216)", borderColor:"rgb(216, 216, 216)", color:"black"}} onClick={() => setDeleteReview(true)}>
+                           <i className="bi bi-trash3"></i>
                             <Modal
                               show={deleteReview}
                               onHide={() => setDeleteReview(false)}
@@ -247,7 +266,8 @@ export const Home = ({ user }: { user: User }) => {
                   );
                 })}
               </div>
-              {editedReview ? (
+                {user && (
+              editedReview ? (
                 <>
                   <textarea
                     rows={3}
@@ -265,16 +285,19 @@ export const Home = ({ user }: { user: User }) => {
                 </>
               ) : (
                 <>
+                
                   <textarea
+                    style={{marginTop:"20px" , borderRadius:"3px"}}
                     placeholder="Add your comment..."
                     rows={3}
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                   />
-                  <Button variant="primary" onClick={handleReviewSubmit}>
-                    Comment
+                  <Button style={{marginLeft:"15px"}} variant="primary" onClick={handleReviewSubmit}>
+                  Comment
                   </Button>
                 </>
+              )
               )}
             </div>
           </div>
@@ -289,8 +312,8 @@ export const Home = ({ user }: { user: User }) => {
           </div>
           <div>
             {(isAuthor || isAdmin) && (
-              <Button onClick={() => handleDeleteBook(selectedBook!)}>
-                Delete
+              <Button style={{backgroundColor:"red" , borderColor:"red"}} onClick={() => handleDeleteBook(selectedBook!)}>
+                <i className="bi bi-trash3"></i>
               </Button>
             )}
           </div>
