@@ -4,6 +4,9 @@ import "./Profile.css";
 import { BASE_URL } from "../../constants";
 import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 interface UserProfileProps {
   user: User;
@@ -52,7 +55,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
         const res = await api.getAllUsers() as { users: User[] }; 
         console.log("the res!!", res);
         
-        // Create an object to map users by their IDs
+        
         const usersById: { [key: string]: User } = {};
         res.users.forEach(user => {
           usersById[user!._id] = user;
@@ -164,16 +167,14 @@ const handleDeleteAccount = async (userId: string) => {
           </div>
           
         )}
-           <div>
-              <button onClick={()=> handleDeleteAccount(user?._id)}>Delete my account</button>
-        </div>
+          
 
 {(user.role === "admin" && profileUsers.length > 0) && (
-  <div className="user-user-section">
+  <div className="user-user-section" style={{marginTop:"60px"}}>
     <h2>All Users</h2>
-    <table className="user-table">
-      <thead>
-        <tr>
+    <table className="user-table" style={{textAlign:"center", marginTop:"30px" }}>
+      <thead >
+        <tr style={{color:"black" }}>
           <th>Name</th>
           <th>Email</th>
           <th>Role</th>
@@ -191,16 +192,19 @@ const handleDeleteAccount = async (userId: string) => {
               <img
                 src={getUserImage(user!)} alt="User Avatar"
                 style={{
-                  width: "100px",
-                  height: "100px",
-                  borderRadius: "4px",
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "50px",
                 }}
                 className="user-image"
               />
             </td>
             <td>
-              <button onClick={() => handleDeleteUserByAdmin(user?._id)}>Delete</button>
-           
+              <div>
+              <button onClick={() => handleDeleteUserByAdmin(user?._id)}  style={{backgroundColor:"transparent"}}>
+              <i className="bi bi-trash3"></i>
+                </button>
+              </div>
             </td>
           </tr>
           
@@ -209,8 +213,20 @@ const handleDeleteAccount = async (userId: string) => {
     </table>
   </div>
 )}
-        <div>
-        <button onClick={handleUpdateClick}>Update Details</button>
+<div style={{marginTop:"30px"}}>
+      <button onClick={handleUpdateClick} style={{padding:"7px" }}>
+        Update Profile
+        <> </>
+        <i className="bi bi-pencil-square"></i> 
+        </button>
+      
+
+      
+              <button onClick={()=> handleDeleteAccount(user?._id)} style={{padding:"7px" , marginLeft:"10px"}}>
+                Delete my account 
+                <> </>
+               <i className="bi bi-trash3"></i>
+                </button>
         </div>
         
 

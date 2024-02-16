@@ -1,8 +1,8 @@
 .home-container {
-  background-image: url("/src/assets/books.jpeg");
+  background-image: url("/src/assets/backgorundd.jpg");
   background-size: cover;
   background-position: center;
-  height: 100vh; /* Set height to cover the entire viewport */
+  height: 100%; 
   width: 200%;
   display: flex;
   flex-direction: column;
@@ -14,11 +14,23 @@
   background-attachment: fixed;
 }
 
+.modal-content{
+  background-color: black;
+}
+
 .reviews-container {
   max-height: 500px;
   overflow-y: scroll;
   .reviews-panel {
+    background-color: rgb(216, 216, 216);
+    color: black;
+    border: 1px solid aliceblue;
+    border-radius: 10px;
+    margin-right: 8px;
+    padding: 8px;
+    padding-bottom: 0px;
     display: flex;
+    margin-bottom: 10px;
     .review-image {
       width: 50px;
       height: 50px;

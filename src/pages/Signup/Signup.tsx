@@ -77,13 +77,15 @@ export function Signup({ setUser }: { setUser: (user: User) => void }) {
 
   return (
     <div style={{}}>
-      <h1>Signup</h1>
+      <h1 style={{color:"white", marginBottom:"80px"}}>Signup</h1>
       <div>
         <GoogleLogin
           onSuccess={onGoogleLoginSuccess}
           onError={onGoogleLoginError}
+          
         />
       </div>
+      
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
