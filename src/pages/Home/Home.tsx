@@ -11,6 +11,7 @@ import StarRating from "../../components/Navbar/starsRating";
 import { api } from "../../utilities/api";
 import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
+import axios from "axios";
 
 export const Home = ({ user }: { user: User }) => {
   const isAuthor = user?.role === "author";
@@ -27,6 +28,8 @@ export const Home = ({ user }: { user: User }) => {
   const [editedReview, setEditedReview] = useState<Review | null>(null);
   const [showAddEditBook, setShowAddEditBook] = useState(false);
   const [deleteReview, setDeleteReview] = useState(false);
+  const [exchangeRate, setExchangeRate] = useState<number | null>(null);
+
 
   const closeAddEditBook = () => {
     fetchBooks();
@@ -51,6 +54,29 @@ export const Home = ({ user }: { user: User }) => {
 
   useEffect(() => {
     fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.apilayer.com/exchangerates_data/latest?symbols=ils&base=usd`,
+          {
+            headers: {
+              apikey: "z5Fzx57Dwp1sWkryh3F9ZCM3dChFloSD",
+            },
+          }
+        );
+        const data = await response.data;
+        console.log("Exchange Rate Data:", data); 
+        const usdToILS = data.rates.ILS;
+        setExchangeRate(usdToILS);
+      } catch (error) {
+        console.error("Error fetching exchange rate:", error);
+      }
+    };
+    fetchExchangeRate();
   }, []);
 
   const handleBookClick = async (book: Book) => {
@@ -111,9 +137,38 @@ export const Home = ({ user }: { user: User }) => {
   const selectedReview = reviews.find((review) => review._id === selectedReviewId);
   console.log("selectedReview", selectedReview);
 
+  
+
   return (
     <div className="home-container">
-      <div>
+
+<div style={{ position: "fixed", bottom: 0, right: 0, margin: "20px" }}>
+  {exchangeRate && (
+    <div style={{
+      backgroundColor: "rgba(0, 0, 0, 0.7)", 
+      color: "white",
+      padding: "12px", 
+      borderRadius: "12px", 
+      display: "flex",
+      alignItems: "center",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)", 
+    }}>
+      <span style={{ 
+        marginRight: "8px", 
+        fontSize: "1.2rem", 
+      }}>$</span>
+      <h4 style={{ 
+        marginTop: "0", 
+        marginBottom: "0",
+        fontWeight: "bold", 
+        color: "#27ae60", 
+      }}>
+        1 USD = {exchangeRate} ILS
+      </h4>
+    </div>
+  )}
+</div>
+    <div>
         {(isAuthor || isAdmin) && (
           <Button onClick={handleAddBook} style={{marginTop:"20px" , backgroundColor:"rgb(255, 228, 200)" , borderColor:"rgb(255, 228, 200)" , color:"black"}}>Add a book</Button>
         )}
@@ -328,6 +383,9 @@ export const Home = ({ user }: { user: User }) => {
         show={showAddEditBook}
         selectedBook={selectedBook}
       />
-    </div>
+  
+    </div>  
+    
+    
   );
 };
