@@ -17,6 +17,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
   useEffect(() => {
     if(error!==null){
     console.log(error);
+    alert(error);
   }
   }, [error]);
 
@@ -46,7 +47,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     }catch (error) {
       console.log("Error logging in:", error);
       setError("Invalid username or password");
-      alert("Invalid username or password");
+      // alert("Invalid username or password");
     }
     
   };
