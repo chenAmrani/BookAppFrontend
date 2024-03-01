@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Book, User } from "../../types";
+import { Book, User, UserData } from "../../types";
 import "./Profile.css";
 import { BASE_URL } from "../../constants";
 import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 interface UserProfileProps {
   user: User;
@@ -25,8 +24,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   useEffect(() => {
     const fetchProfileBooks = async () => {
       try {
-        const res = await api.getUserBooks() as { myBooks: string[] };
-        const bookPromises = res.myBooks.map(async (bookId: string) => {
+        const res = await api.getUserBooks(user!._id);
+        console.log("res", res);
+        const bookPromises = res?.data.myBooks.map(async (bookId: string) => {
           try {
             const book = await api.getBookById(bookId);
             console.log("the book", book);
@@ -37,8 +37,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           }
         });
 
-        const books = await Promise.all(bookPromises);
-        console.log("the books", books);
+        const books = (await Promise.all(bookPromises)).map(
+          (book) => book?.data
+        );
+
         setProfileBooks(books as Book[]);
       } catch (error) {
         console.error("Error fetching profile books:", error);
@@ -48,16 +50,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     fetchProfileBooks();
   }, []);
 
-
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const res = await api.getAllUsers() as { users: User[] }; 
-        console.log("the res!!", res);
-        
-        
+        const res = await api.getAllUsers();
+        const users = res?.data.users as UserData[];
         const usersById: { [key: string]: User } = {};
-        res.users.forEach(user => {
+        users.forEach((user) => {
           usersById[user!._id] = user;
         });
 
@@ -67,23 +66,23 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
         console.error("Error fetching all users:", error);
       }
     };
-  
+
     fetchAllUsers();
   }, []);
-  
+
   const handleDeleteUserByAdmin = async (userId: string | undefined) => {
     if (userId) {
       const response = await api.deleteUserByAdmin(userId);
       console.log("Delete User Response:", response);
-      const updatedUsers = profileUsers.filter(user => user?._id !== userId);
+      const updatedUsers = profileUsers.filter((user) => user?._id !== userId);
       setProfileUsers(updatedUsers);
     }
   };
-const handleDeleteAccount = async (userId: string) => {
-  const response = await api.deleteUser(userId);
-  console.log("Delete User Response:", response);
-  setUser(null);
-}
+  const handleDeleteAccount = async (userId: string) => {
+    const response = await api.deleteUser(userId);
+    console.log("Delete User Response:", response);
+    setUser(null);
+  };
 
   const handleUpdateClick = () => {
     setShowUpdateForm(!showUpdateForm);
@@ -125,7 +124,7 @@ const handleDeleteAccount = async (userId: string) => {
     formData.append("id", user?._id || "");
     const response = await api.updateUserProfile(formData);
 
-    const updatedUser = await response.json();
+    const updatedUser = response!.data;
     console.log("Updated User Data:", updatedUser);
 
     setShowUpdateForm(false);
@@ -165,70 +164,74 @@ const handleDeleteAccount = async (userId: string) => {
               ))}
             </div>
           </div>
-          
         )}
-          
 
-{(user.role === "admin" && profileUsers.length > 0) && (
-  <div className="user-user-section" style={{marginTop:"60px"}}>
-    <h2>All Users</h2>
-    <table className="user-table" style={{textAlign:"center", marginTop:"30px" }}>
-      <thead >
-        <tr style={{color:"black" }}>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Image</th>
-          <th>Action</th> {/* New column for delete button */}
-        </tr>
-      </thead>
-      <tbody>
-        {profileUsers.map((user) => (
-          <tr key={user?._id}>
-            <td>{user?.name}</td>
-            <td>{user?.email}</td>
-            <td>{user?.role}</td>
-            <td>
-              <img
-                src={getUserImage(user!)} alt="User Avatar"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  borderRadius: "50px",
-                }}
-                className="user-image"
-              />
-            </td>
-            <td>
-              <div>
-              <button onClick={() => handleDeleteUserByAdmin(user?._id)}  style={{backgroundColor:"transparent"}}>
-              <i className="bi bi-trash3"></i>
-                </button>
-              </div>
-            </td>
-          </tr>
-          
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
-<div style={{marginTop:"30px"}}>
-      <button onClick={handleUpdateClick} style={{padding:"7px" }}>
-        Update Profile
-        <> </>
-        <i className="bi bi-pencil-square"></i> 
-        </button>
-      
+        {user.role === "admin" && profileUsers.length > 0 && (
+          <div className="user-user-section" style={{ marginTop: "60px" }}>
+            <h2>All Users</h2>
+            <table
+              className="user-table"
+              style={{ textAlign: "center", marginTop: "30px" }}
+            >
+              <thead>
+                <tr style={{ color: "black" }}>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Image</th>
+                  <th>Action</th> {/* New column for delete button */}
+                </tr>
+              </thead>
+              <tbody>
+                {profileUsers.map((user) => (
+                  <tr key={user?._id}>
+                    <td>{user?.name}</td>
+                    <td>{user?.email}</td>
+                    <td>{user?.role}</td>
+                    <td>
+                      <img
+                        src={getUserImage(user!)}
+                        alt="User Avatar"
+                        style={{
+                          width: "50px",
+                          height: "50px",
+                          borderRadius: "50px",
+                        }}
+                        className="user-image"
+                      />
+                    </td>
+                    <td>
+                      <div>
+                        <button
+                          onClick={() => handleDeleteUserByAdmin(user?._id)}
+                          style={{ backgroundColor: "transparent" }}
+                        >
+                          <i className="bi bi-trash3"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div style={{ marginTop: "30px" }}>
+          <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
+            Update Profile
+            <> </>
+            <i className="bi bi-pencil-square"></i>
+          </button>
 
-      
-              <button onClick={()=> handleDeleteAccount(user?._id)} style={{padding:"7px" , marginLeft:"10px"}}>
-                Delete my account 
-                <> </>
-               <i className="bi bi-trash3"></i>
-                </button>
+          <button
+            onClick={() => handleDeleteAccount(user?._id)}
+            style={{ padding: "7px", marginLeft: "10px" }}
+          >
+            Delete my account
+            <> </>
+            <i className="bi bi-trash3"></i>
+          </button>
         </div>
-        
 
         {showUpdateForm && (
           <form onSubmit={handleUpdateSubmit}>
@@ -275,7 +278,6 @@ const handleDeleteAccount = async (userId: string) => {
           </form>
         )}
       </>
-      
     </div>
   );
 };

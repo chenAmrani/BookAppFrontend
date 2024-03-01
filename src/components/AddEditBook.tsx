@@ -2,7 +2,6 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { Book, User } from "../types";
 import { useRef, useState } from "react";
 import apiClient from "../utilities/api-client";
-// import { api } from "../utilities/api";
 import decodeToken from "../utilities/auth";
 import { api } from "../utilities/api";
 
@@ -10,9 +9,11 @@ export const AddEditBook = ({
   onClose,
   show,
   selectedBook,
+  user,
 }: {
   onClose: () => void;
   show: boolean;
+  user: User | null;
   selectedBook?: Book;
 }) => {
   const isEditing = Boolean(selectedBook);
@@ -35,6 +36,7 @@ export const AddEditBook = ({
     }
 
     const image = imageRef.current!.files![0];
+    console.log("image", image);
     const token = localStorage.getItem("accessToken");
 
     const formData = new FormData();
@@ -45,47 +47,37 @@ export const AddEditBook = ({
     formData.append("rating", rating.toString());
     formData.append("category", category);
     formData.append("summary", summary);
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
     console.log("image update book", image);
     formData.append("author", decodeToken(token!)._id);
 
-    const userId = decodeToken(token!); 
-    const user = await api.getUserById(userId._id) as User;
-    console.log("user!!!", user);
- 
+    if (!selectedBook) {
+      if (user?.role === "author") {
+        const response = await apiClient.post("/book", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    if(!selectedBook){
-      if(user?.role==="author"){
-    const response = await apiClient.post("/book", formData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+        if (response.status !== 201) {
+          return alert("Failed to add book");
+        }
+      } else if (user?.role === "admin") {
+        const response = await apiClient.post("/book/admin", formData, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    if (response.status !== 201) {
-      return alert("Failed to add book");
-    }
-  }
-
-  else if(user?.role==="admin"){
-    const response = await apiClient.post("/book/admin", formData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (response.status !== 201) {
-      return alert("Failed to add book");
-    }
-  }
-}
-
-
-  else {
-    if(user?.role==="author"){
-      api.updateBookByAuthor(selectedBook._id, formData);
-    }
-      else if(user?.role==="admin"){
-        api.updateBookByAdmin(selectedBook._id, formData);
+        if (response.status !== 201) {
+          return alert("Failed to add book");
+        }
       }
-
-  }
+    } else {
+      if (user?.role === "author") {
+        await api.updateBookByAuthor(selectedBook._id, formData);
+      } else if (user?.role === "admin") {
+        await api.updateBookByAdmin(selectedBook._id, formData);
+      }
+    }
 
     onClose();
   };

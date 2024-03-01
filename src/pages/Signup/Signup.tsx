@@ -41,14 +41,27 @@ export function Signup({ setUser }: { setUser: (user: User) => void }) {
     formData.append("role", role);
     formData.append("avatar", avatarRef.current?.files?.[0]);
 
-    const response = await fetch(`${BASE_URL}/auth/register`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error);
+      }
 
-    const userData = await response.json();
-    setUser(userData);
-    setSignedUp(true);
+      const userData = await response.json();
+      localStorage.setItem(ACCESS_TOKEN_KEY, userData.accessToken!);
+      localStorage.setItem(REFRESH_TOKEN_KEY, userData.refreshToken!);
+      setUser(userData);
+      setSignedUp(true);
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      alert((e as unknown as any).message);
+    }
   };
 
   const onGoogleLoginSuccess = async (
@@ -77,15 +90,14 @@ export function Signup({ setUser }: { setUser: (user: User) => void }) {
 
   return (
     <div style={{}}>
-      <h1 style={{color:"white", marginBottom:"80px"}}>Signup</h1>
+      <h1 style={{ color: "white", marginBottom: "80px" }}>Signup</h1>
       <div>
         <GoogleLogin
           onSuccess={onGoogleLoginSuccess}
           onError={onGoogleLoginError}
-          
         />
       </div>
-      
+
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
