@@ -3,6 +3,7 @@ import Nav from "react-bootstrap/Nav";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { User } from "../../types";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "../../constants";
 
 export function Navbar({
   user,
@@ -12,35 +13,30 @@ export function Navbar({
   setUser: (user: User | null) => void;
   googleSignIn: boolean;
 }) {
-
-  
-
-     
-      
+  const handleLogout = () => {
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    setUser(null);
+  };
   return (
     <>
-      <BootstrapNavbar bg="dark" data-bs-theme="dark"  >
+      <BootstrapNavbar bg="dark" data-bs-theme="dark">
         <Container>
           <BootstrapNavbar.Brand>
-            <Link to='/'><img
-                src="/src/assets/Logo.png"  
-                alt="Logo"
-                height="30"
-              /></Link>
-            
-            
+            <Link to="/">
+              <img src="/src/assets/Logo.png" alt="Logo" height="30" />
+            </Link>
           </BootstrapNavbar.Brand>
           <Nav className="me-auto">
-          {user ?(
+            {user ? (
               <>
-              <Link to="/" onClick={() => setUser(null)}>
-              Logout
-              </Link>
-              <Link style={{marginLeft:"20px"}} to="/profile">
-              Profile
-              </Link>
+                <Link to="/" onClick={handleLogout}>
+                  Logout
+                </Link>
+                <Link style={{ marginLeft: "20px" }} to="/profile">
+                  Profile
+                </Link>
               </>
-              
             ) : (
               <>
                 <Link className="nav-link" to="login">
@@ -52,9 +48,6 @@ export function Navbar({
                 </Link>
               </>
             )}
-
-          
-            
           </Nav>
         </Container>
       </BootstrapNavbar>
