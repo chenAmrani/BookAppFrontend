@@ -84,7 +84,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
   return (
     <div style={{}}>
       <h1>Login</h1>
-      <div >
+      <div style={{width:""}}>
         <GoogleLogin
           onSuccess={onGoogleLoginSuccess}
           onError={onGoogleLoginError}
