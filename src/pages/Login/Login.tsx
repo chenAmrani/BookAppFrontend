@@ -2,8 +2,10 @@ import { FormEvent, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { User } from "../../types";
-import { ACCESS_TOKEN_KEY, BASE_URL } from "../../constants";
+import { ACCESS_TOKEN_KEY, BASE_URL, REFRESH_TOKEN_KEY } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { googleSignin } from "../../utilities/googleSignIn";
 
 
 export function Login({ setUser }: { setUser: (user: User) => void }) {
@@ -47,15 +49,47 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     }catch (error) {
       console.log("Error logging in:", error);
       setError("Invalid username or password");
-      // alert("Invalid username or password");
     }
     
   };
 
+  const onGoogleLoginSuccess = async (
+    credentialResponse: CredentialResponse
+  ) => {
+    console.log(credentialResponse);
+    try {
+      const res = await googleSignin(credentialResponse);
+      console.log("the res is: ", res);
+      if (res == null) return;
+      localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken!);
+      localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken!);
+      const userData = res.userData;
+      setUser(userData);
+      console.log("the res is: ", res);
+      navigate("/");
+      setLoggedIn(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const onGoogleLoginError = () => {
+    console.log("Google login failed");
+  };
+
+
+
+  
+
   return (
     <div style={{}}>
       <h1>Login</h1>
-
+      <div >
+        <GoogleLogin
+          onSuccess={onGoogleLoginSuccess}
+          onError={onGoogleLoginError}
+        />
+      </div>
      
 
       <Form style={{ maxWidth: "400px" }} onSubmit={handleSubmit}>
