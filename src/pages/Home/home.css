@@ -2,25 +2,28 @@
   background-image: url("/src/assets/backgorundd.jpg");
   background-size: cover;
   background-position: center;
-  height: 100vh; 
-  width: 200%;
+  min-height: 100%; /* Ensure the container fills the viewport height */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Align content to the top of the container */
   color: white;
   background-blend-mode: hue;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  width: 130%
 }
 
 .modal-content{
   background-color: black;
+  max-width: 100%;
+ 
+  
 }
 
 .reviews-container {
   max-height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
+  
   .reviews-panel {
     background-color: rgb(216, 216, 216);
     color: black;
@@ -31,6 +34,9 @@
     padding-bottom: 0px;
     display: flex;
     margin-bottom: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word; /* Fallback for older browsers */
+    max-width: 100%;
     .review-image {
       width: 50px;
       height: 50px;
@@ -41,26 +47,48 @@
         object-fit: cover;
       }
     }
+    .comment-input-form {
+      /* Add this to enable vertical scrolling for long comments */
+      max-height: 200px; /* Adjust as needed */
+      overflow-y: auto; /* Enable vertical scrolling */
+    }
+    .review {
+      overflow-y: auto; /* Enable vertical scrolling within the comment container */
+      max-height: 100px; /* Adjust the max-height of the comment container as needed */
+      padding-right: 10px; /* Add some padding to prevent the scrollbar from overlaying content */
+    }
 
     .comment-details {
       display: flex;
       flex-direction: column;
       margin-left: 10px;
-
+      max-width: calc(100% - 60px); /* Adjust the max-width to leave space for the comment image */
+      overflow-wrap: break-word; /* Ensure long words break to prevent overflow */
+      word-wrap: break-word; /* Fallback for older browsers */
+      overflow-y: auto; /* Enable vertical scrolling for long comments */
+      max-width: 300px; 
+      padding-right:0px;
+      max-width: 500px; /* Adjust the max-width as needed */
+      height: auto; /* Set height to auto or increase the height value */
+      max-height: none; /* Remove any max-height property */
       .name {
         font-weight: bold;
       }
     }
+    .comment-button {
+      /* Other styles */
+      height: 100px; /* Adjust the height to match the comment area */
+    }
 
-    .book-grid-container{
+    .book-grid-container {
       display: grid;
-      height: 50rem;
-      grid-template-columns: 2fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      grid-template-areas: 'one two four' 'one two four-low';
-      gap: 1.3rem;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust the minimum and maximum width as needed */
+      grid-gap: 20px;
+      max-height: calc(100vh - 200px);
+      overflow-y: auto;
       margin-top: 1.3rem;
     }
+   
 
     .book-grid-item{
       display: grid;
@@ -85,6 +113,8 @@
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust the width as needed */
       grid-gap: 20px; /* Adjust the gap between cards */
+      max-height: calc(100vh - 200px); /* Adjust as needed */
+      overflow-y: auto; /* Enable vertical scrolling */
     }
     
     .book-grid-item {
