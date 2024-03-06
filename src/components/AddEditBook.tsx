@@ -31,6 +31,40 @@ export const AddEditBook = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // if adiing a new book, check if all fields are filled
+    if (!isEditing) {
+      if (
+        !name.trim() ||
+        !year.toString().trim() ||
+        !(pages.toString().trim()) ||
+        !price.toString().trim() ||
+        !rating.toString().trim() ||
+        !category.trim() ||
+        !summary.trim()
+      ) {
+        return alert("Please fill in all fields");
+      }
+    }
+
+    const yearNumber = Number(year);
+    if (yearNumber < 0 || yearNumber > 2024 && name.trim() !== "") {
+      return alert("Please enter a valid year between 0 and 2024.");
+    }
+  
+   
+    if (typeof pages === 'string' && Number(pages) <= 0 && pages.trim() !== "") {
+      return alert("Please enter a valid number of pages.");
+    }
+
+    if (typeof price === 'string' && Number(price) <= 0 && price.trim() !== "") {
+      return alert("Please enter a price greater than 0.");
+    }
+  
+    const ratingNumber = Number(rating);
+    if (ratingNumber < 0 || ratingNumber > 5 && String(rating).trim() !== "") {
+      return alert("Please enter a valid rating between 0 and 5.");
+    }
+
     if (!isEditing && !imageRef.current?.files?.length) {
       return alert("Please add an image");
     }

@@ -1,8 +1,9 @@
 import axios, { CanceledError } from "axios";
+import { BASE_URL } from "../constants";
 
 export { CanceledError };
 export const apiClient = axios.create({
-  baseURL: "http://localhost:6969",
+  baseURL: BASE_URL
   // validateStatus: () => true,
 });
 

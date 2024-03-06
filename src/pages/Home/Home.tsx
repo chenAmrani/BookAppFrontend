@@ -13,6 +13,7 @@ import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
 import axios from "axios";
 
+
 export const Home = ({ user }: { user: User }) => {
   const isAuthor = user?.role === "author";
   const isAdmin = user?.role === "admin";
@@ -27,6 +28,7 @@ export const Home = ({ user }: { user: User }) => {
   const [showAddEditBook, setShowAddEditBook] = useState(false);
   const [deleteReview, setDeleteReview] = useState(false);
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
+  const [columns, setColumns] = useState(1);
 
   const closeAddEditBook = () => {
     fetchBooks();
@@ -52,6 +54,24 @@ export const Home = ({ user }: { user: User }) => {
   useEffect(() => {
     fetchBooks();
   }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 800) {
+        setColumns(3); // Set to three columns for screens larger than 768px
+      
+      } else if (window.innerWidth >= 576) {
+        setColumns(2); // Set to one column for smaller screens
+      }else{
+        setColumns(1);
+      }
+  };
+  window.addEventListener('resize', handleResize);
+  handleResize();
+
+  // Cleanup event listener on component unmount
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
@@ -175,6 +195,7 @@ export const Home = ({ user }: { user: User }) => {
         {(isAuthor || isAdmin) && (
           <Button
             onClick={handleAddBook}
+            className="add-book-button" 
             style={{
               marginTop: "20px",
               backgroundColor: "rgb(255, 228, 200)",
@@ -191,7 +212,7 @@ export const Home = ({ user }: { user: User }) => {
         style={{
           marginTop: "100px",
           display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
           gridRowGap: "40px",
           gridColumnGap: "40px",
           gap: "40px",
@@ -376,16 +397,17 @@ export const Home = ({ user }: { user: User }) => {
                 ) : (
                   <>
                     <textarea
-                      style={{ marginTop: "20px", borderRadius: "3px" }}
+                      style={{ marginTop: "20px", borderRadius: "10px", width: "70%"}}
                       placeholder="Add your comment..."
                       rows={3}
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                     />
                     <Button
-                      style={{ marginLeft: "15px" }}
+                      style={{ marginLeft: "15px", marginBottom: "25px", marginRight: "25px" }}
                       variant="primary"
                       onClick={handleReviewSubmit}
+                      
                     >
                       Comment
                     </Button>
@@ -403,7 +425,7 @@ export const Home = ({ user }: { user: User }) => {
             )}
           </div>
           <div>
-            {(isAuthor || isAdmin) && (
+            {(user?._id === selectedBook?.author  || isAdmin) && (
               <Button
                 style={{ backgroundColor: "red", borderColor: "red" }}
                 onClick={() => handleDeleteBook(selectedBook!)}

@@ -97,6 +97,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
       const file = e.target.files[0];
       console.log("the file", file);
       setUpdatedImage(file);
+
     }
   };
 
@@ -127,8 +128,14 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     const updatedUser = response!.data;
     console.log("Updated User Data:", updatedUser);
 
+    const updatedUsers = profileUsers.map((profileUser) =>
+      profileUser && profileUser._id === updatedUser._id ? updatedUser : profileUser
+    );
+    setProfileUsers(updatedUsers);
+
     setShowUpdateForm(false);
     setUser(updatedUser);
+    
   };
 
   if (!user) {
