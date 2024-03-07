@@ -23,7 +23,7 @@ export function Navbar({
         <Container>
           <BootstrapNavbar.Brand>
             <Link to='/'><img
-                src="/src/assets/Logo.png"  
+                src="/src/assets/Logo.jpg"  
                 alt="Logo"
                 height="30"
               /></Link>
