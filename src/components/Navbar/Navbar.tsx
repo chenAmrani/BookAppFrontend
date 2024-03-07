@@ -24,7 +24,7 @@ export function Navbar({
           <BootstrapNavbar.Brand>
             <Link to='/'><img
             //jnjn
-                src="../../assets/logo.png" 
+                src="/src/assets/logo.png"
                 alt="Logo"
                 height="30"
               /></Link>
