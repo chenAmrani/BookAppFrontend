@@ -13,28 +13,34 @@ export function Navbar({
   googleSignIn: boolean;
 }) {
 
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("token");
+    setUser(null);
+  }
   
 
-     
+  const token = localStorage.getItem("accessToken");
       
   return (
     <>
-      <BootstrapNavbar bg="dark" data-bs-theme="dark"  >
+      <BootstrapNavbar bg="dark" data-bs-theme="dark" style={{marginBottom:"-15px"}}>
         <Container>
           <BootstrapNavbar.Brand>
-            <Link to='/'><img
-            //jnjn
-                src="/src/assets/logo.png"
-                alt="Logo"
-                height="30"
-              /></Link>
+            <h3>
+            <Link style={{color:"GrayText"}} to='/'>
+              Home
+              </Link>
+              </h3>
             
             
           </BootstrapNavbar.Brand>
           <Nav className="me-auto">
-          {user ?(
+          
+          {user || token ?(
               <>
-              <Link to="/" onClick={() => setUser(null)}>
+              <Link to="/" onClick={() => handleLogout()}>
               Logout
               </Link>
               <Link style={{marginLeft:"20px"}} to="/profile">

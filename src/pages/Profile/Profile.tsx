@@ -12,6 +12,7 @@ interface UserProfileProps {
   setUser: (user: User) => void;
 }
 
+
 const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [updatedName, setUpdatedName] = useState(user?.name || "");
@@ -20,6 +21,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
+
+  console.log("user", user);
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
@@ -138,7 +141,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     
   };
 
-  if (!user) {
+  const token = localStorage.getItem('accessToken');
+
+  if (!user || !token) {
     return <p>Loading...</p>;
   }
 

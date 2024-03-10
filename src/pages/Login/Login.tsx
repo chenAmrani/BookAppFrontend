@@ -28,6 +28,8 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     console.log(loggedIn);
   }, [loggedIn]);
 
+  
+  
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try{
@@ -50,8 +52,10 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
       console.log("Error logging in:", error);
       setError("Invalid username or password");
     }
+  
     
   };
+
 
   const onGoogleLoginSuccess = async (
     credentialResponse: CredentialResponse
@@ -77,9 +81,6 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     console.log("Google login failed");
   };
 
-
-
-  
 
   return (
     <div style={{}}>
@@ -113,7 +114,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
           />
         </Form.Group>
 
-        <br />
+        <br/>
         <Button variant="primary" type="submit">
           Submit
         </Button>
