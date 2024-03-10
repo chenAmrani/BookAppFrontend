@@ -6,6 +6,7 @@ import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { set } from "mongoose";
 
 interface UserProfileProps {
   user: User;
@@ -21,8 +22,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
-
-  console.log("user", user);
+  localStorage.setItem("user", JSON.stringify(user));
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
@@ -85,6 +85,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     const response = await api.deleteUser(userId);
     console.log("Delete User Response:", response);
     setUser(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
   };
 
   const handleUpdateClick = () => {
@@ -100,7 +103,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
       const file = e.target.files[0];
       console.log("the file", file);
       setUpdatedImage(file);
-
+      
     }
   };
 
