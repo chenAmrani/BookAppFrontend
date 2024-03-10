@@ -44,6 +44,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
     setUser(data.userData);
     localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
     localStorage.setItem("refreshToken", data.refreshToken);
+    localStorage.setItem("user", JSON.stringify(data.userData));
     setError(null);
     navigate("/");
     setLoggedIn(false);
@@ -68,6 +69,7 @@ export function Login({ setUser }: { setUser: (user: User) => void }) {
       localStorage.setItem(ACCESS_TOKEN_KEY, res.accessToken!);
       localStorage.setItem(REFRESH_TOKEN_KEY, res.refreshToken!);
       const userData = res.userData;
+      localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       console.log("the res is: ", res);
       navigate("/");

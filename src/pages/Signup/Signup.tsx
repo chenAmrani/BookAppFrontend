@@ -54,6 +54,7 @@ export function Signup({ setUser }: { setUser: (user: User) => void }) {
       const userData = await response.json();
       localStorage.setItem(ACCESS_TOKEN_KEY, userData.accessToken!);
       localStorage.setItem(REFRESH_TOKEN_KEY, userData.refreshToken!);
+      localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       setSignedUp(true);
       navigate("/");

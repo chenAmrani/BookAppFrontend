@@ -3,6 +3,9 @@ import Nav from "react-bootstrap/Nav";
 import BootstrapNavbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
 import { User } from "../../types";
+import { MdHome } from "react-icons/md";
+
+
 
 export function Navbar({
   user,
@@ -17,6 +20,7 @@ export function Navbar({
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   }
   
@@ -30,7 +34,9 @@ export function Navbar({
           <BootstrapNavbar.Brand>
             <h3>
             <Link style={{color:"GrayText"}} to='/'>
-              Home
+            <MdHome
+            size={"1.7em"}
+            />
               </Link>
               </h3>
             

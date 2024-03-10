@@ -9,7 +9,7 @@ import { Login } from "./pages/Login/Login";
 import Profile from "./pages/Profile/Profile";
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!) : null);
 
   return (
     <div className="App bg-dark">
