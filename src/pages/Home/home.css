@@ -1,5 +1,5 @@
 .home-container {
-  background-image: url("/src/assets/backgorundd.jpg");
+  background-image: url("src/assets/background.jpg");
   background-size: cover;
   background-position: center;
   min-height: 100%; /* Ensure the container fills the viewport height */
@@ -10,7 +10,8 @@
   color: white;
   background-blend-mode: hue;
   background-repeat: no-repeat;
-  width: 100%
+  width: 100%;
+  min-height: 800px;
 }
 
 .modal-content{
