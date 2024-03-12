@@ -6,7 +6,7 @@ import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { set } from "mongoose";
+// import { set } from "mongoose";
 
 interface UserProfileProps {
   user: User;
