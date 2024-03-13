@@ -157,7 +157,7 @@ export const Home = ({ user }: { user: User }) => {
   console.log("selectedReview", selectedReview);
 
   return (
-    <div className="home-container" style={{backgroundImage: background}} >
+    <div className="home-container" style={{backgroundImage: `url(${background})`}} >
       <div style={{ position: "fixed", bottom: 0, right: 0, margin: "20px" }}>
         {exchangeRate && (
           <div
