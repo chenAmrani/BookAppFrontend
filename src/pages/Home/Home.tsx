@@ -12,7 +12,7 @@ import { api } from "../../utilities/api";
 import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
 import axios from "axios";
-// import background from "../../assets/background.jpg"
+import background from "../../assets/background.jpg"
 
 
 export const Home = ({ user }: { user: User }) => {
@@ -157,7 +157,7 @@ export const Home = ({ user }: { user: User }) => {
   console.log("selectedReview", selectedReview);
 
   return (
-    <div className="home-container" >
+    <div className="home-container" style={{backgroundImage: background}} >
       <div style={{ position: "fixed", bottom: 0, right: 0, margin: "20px" }}>
         {exchangeRate && (
           <div
