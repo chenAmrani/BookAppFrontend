@@ -198,13 +198,16 @@ export const Home = ({ user }: { user: User }) => {
             onClick={handleAddBook}
             className="add-book-button" 
             style={{
+             
               marginTop: "20px",
-              backgroundColor: "rgb(255, 228, 200)",
-              borderColor: "rgb(255, 228, 200)",
               color: "black",
+              backgroundColor: "transparent",
+              boxSizing: "border-box",
+              border: "none",
+              fontSize: "50px",
             }}
           >
-            Add a book
+            <i className="bi bi-file-earmark-plus-fill" style={{backgroundColor:"none", }}></i>
           </Button>
         )}
       </div>
