@@ -12,6 +12,7 @@ import { api } from "../../utilities/api";
 import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
 import axios from "axios";
+import background from "../../assets/background.jpg";
 
 
 export const Home = ({ user }: { user: User }) => {
