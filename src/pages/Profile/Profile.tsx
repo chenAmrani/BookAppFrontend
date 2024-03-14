@@ -19,7 +19,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedName, setUpdatedName] = useState(user?.name || "");
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
-  const [isGoogleSignIn, setIsGoogleSignIn] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
