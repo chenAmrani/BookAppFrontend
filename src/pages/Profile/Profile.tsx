@@ -194,7 +194,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                   <th>Email</th>
                   <th>Role</th>
                   <th>Image</th>
-                  <th>Action</th> {/* New column for delete button */}
+                  <th>Action</th> 
                 </tr>
               </thead>
               <tbody>
@@ -259,7 +259,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleNameChange}
               />
             </label>
-
+              if(UserData.isGoogleSsoUser === false){
             <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
               Email:
               <input
@@ -269,7 +269,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setUpdatedEmail(e.target.value)}
               />
             </label>
-
+            }
+            if(UserData.isGoogleSsoUser === false){
             <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
               New password:
               <input
@@ -279,7 +280,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
+}
 
+            if(UserData.isGoogleSsoUser === false){
             <label style={{ paddingTop: "30px", paddingRight: "120px" }}>
               New Image:
               <input
@@ -289,7 +292,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleImageChange}
               />
             </label>
+}
             <button type="submit">Submit</button>
+
           </form>
         )}
       </>
