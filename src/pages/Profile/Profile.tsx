@@ -232,11 +232,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         )}
         <div style={{ marginTop: "30px" }}>
+          {!user.isGoogleSsoUser  && (
           <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
             Update Profile
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
+          )}
 
           <button
             onClick={() => handleDeleteAccount(user?._id)}
@@ -259,8 +261,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleNameChange}
               />
             </label>
-              if(UserData.isGoogleSsoUser === false){
-            <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
+            
+            <label  style={{ paddingTop: "30px", paddingRight: "200px" }}>
               Email:
               <input
                 style={{ width: "150px", marginLeft: "20px" }}
@@ -269,8 +271,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setUpdatedEmail(e.target.value)}
               />
             </label>
-            }
-            if(UserData.isGoogleSsoUser === false){
+
             <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
               New password:
               <input
@@ -280,9 +281,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-}
 
-            if(UserData.isGoogleSsoUser === false){
             <label style={{ paddingTop: "30px", paddingRight: "120px" }}>
               New Image:
               <input
@@ -292,9 +291,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleImageChange}
               />
             </label>
-}
             <button type="submit">Submit</button>
-
           </form>
         )}
       </>
