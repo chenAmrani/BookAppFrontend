@@ -23,7 +23,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
-  localStorage.setItem("user", JSON.stringify(user));
+  const [isGoogleSignIn, setIsGoogleSignIn] = useState<boolean | null>(null);
+    localStorage.setItem("user", JSON.stringify(user));
+    setIsGoogleSignIn(user!.isGoogleSsoUser);
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
@@ -233,12 +235,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         )}
         <div style={{ marginTop: "30px" }}>
+          {isGoogleSignIn && (
           <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
             Update Profile
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
-
+          )}
           <button
             onClick={() => handleDeleteAccount(user?._id)}
             style={{ padding: "7px", marginLeft: "10px" }}
