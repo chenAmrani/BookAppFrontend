@@ -23,7 +23,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
   localStorage.setItem("user", JSON.stringify(user));
-  setIsGoogleSignIn(user!.isGoogleSsoUser);
+  
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
