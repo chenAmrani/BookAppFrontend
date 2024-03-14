@@ -116,20 +116,34 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    if (user?.name !== updatedName && nameRegex.test(updatedName)) {
-      formData.append("name", updatedName);
+    if (user?.name !== updatedName ) {
+      if (nameRegex.test(updatedName)) {
+        formData.append("name", updatedName);
+      } else {
+        alert('Name should only contain alphanumeric characters and spaces.');
+        return; 
+      }
     }
 
-    if (user?.email !== updatedEmail && emailRegex.test(updatedEmail)) {
-      formData.append("email", updatedEmail);
+    if (user?.email !== updatedEmail && !user?.isGoogleSsoUser) {
+      if (emailRegex.test(updatedEmail)) {
+        formData.append("email", updatedEmail);
+      } else {
+        alert('Please enter a valid email address.');
+        return; 
+      }
     }
 
-    if (password && passwordRegex.test(password)) {
-      formData.append("password", password);
+    if (password && !user?.isGoogleSsoUser) {
+      if (passwordRegex.test(password)) {
+        formData.append("password", password);
+      } else {
+        alert('Password should contain at least 6 characters, including at least one letter and one number.');
+        return; 
+      }
     }
 
-    if (updatedImage) {
-      console.log("Updated Image:", updatedImage);
+    if (updatedImage && !user?.isGoogleSsoUser) {
       formData.append("image", updatedImage);
     }
 
