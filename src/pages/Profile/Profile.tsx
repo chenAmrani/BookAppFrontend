@@ -20,12 +20,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedName, setUpdatedName] = useState(user?.name || "");
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
-  const [isGoogleSignIn, setIsGoogleSignIn] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
   localStorage.setItem("user", JSON.stringify(user));
-  setIsGoogleSignIn(user!.isGoogleSsoUser);
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
@@ -240,7 +238,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
-        
 
           <button
             onClick={() => handleDeleteAccount(user?._id)}
@@ -264,7 +261,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
               />
             </label>
             
-            {!isGoogleSignIn && (
             <label  style={{ paddingTop: "30px", paddingRight: "200px" }}>
               Email:
               <input
@@ -274,8 +270,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setUpdatedEmail(e.target.value)}
               />
             </label>
-            )}
-             {!isGoogleSignIn && (
+
             <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
               New password:
               <input
@@ -285,8 +280,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-             )}
-             {!isGoogleSignIn && (
+
             <label style={{ paddingTop: "30px", paddingRight: "120px" }}>
               New Image:
               <input
@@ -296,11 +290,9 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleImageChange}
               />
             </label>
-             )}
             <button type="submit">Submit</button>
           </form>
         )}
-       
       </>
     </div>
   );
