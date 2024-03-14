@@ -6,6 +6,9 @@ import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+const nameRegex = /^[a-zA-Z0-9\s]+$/;
+const emailRegex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 // import { set } from "mongoose";
 
 interface UserProfileProps {
@@ -22,11 +25,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
-  const [googleUser, setGoogleUser] = useState<User | null>(null);
   localStorage.setItem("user", JSON.stringify(user));
-  const userString = localStorage.getItem("user");
-  const userObj = userString && JSON.parse(userString);
-  setGoogleUser(userObj.isGoogleSsoUser);
+
   
 
   useEffect(() => {
@@ -116,15 +116,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    if (user?.name !== updatedName) {
+    if (user?.name !== updatedName && nameRegex.test(updatedName)) {
       formData.append("name", updatedName);
     }
 
-    if (user?.email !== updatedEmail ) {
+    if (user?.email !== updatedEmail && emailRegex.test(updatedEmail)) {
       formData.append("email", updatedEmail);
     }
 
-    if (password) {
+    if (password && passwordRegex.test(password)) {
       formData.append("password", password);
     }
 
@@ -237,13 +237,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         )}
         <div style={{ marginTop: "30px" }}>
-          {!googleUser && (
+          
           <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
             Update Profile
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
-          )}
           
 
           <button
