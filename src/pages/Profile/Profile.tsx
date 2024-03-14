@@ -22,7 +22,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
+  const [googleUser, setGoogleUser] = useState<User | null>(null);
   localStorage.setItem("user", JSON.stringify(user));
+  const userString = localStorage.getItem("user");
+  const userObj = userString && JSON.parse(userString);
+  setGoogleUser(userObj.isGoogleSsoUser);
   
 
   useEffect(() => {
@@ -116,7 +120,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
       formData.append("name", updatedName);
     }
 
-    if (user?.email !== updatedEmail) {
+    if (user?.email !== updatedEmail ) {
       formData.append("email", updatedEmail);
     }
 
@@ -233,12 +237,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         )}
         <div style={{ marginTop: "30px" }}>
-          
+          {!googleUser && (
           <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
             Update Profile
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
+          )}
           
 
           <button
