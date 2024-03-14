@@ -6,6 +6,7 @@ import { api } from "../../utilities/api";
 import { getUserImage } from "../../utilities/auth";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import { googleSignin } from "../../utilities/googleSignIn";
 // import { set } from "mongoose";
 
 interface UserProfileProps {
@@ -19,10 +20,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
   const [updatedName, setUpdatedName] = useState(user?.name || "");
   const [updatedImage, setUpdatedImage] = useState<File | null>(null);
   const [updatedEmail, setUpdatedEmail] = useState(user?.email || "");
+  const [isGoogleSignIn, setIsGoogleSignIn] = useState<boolean | null>(null);
   const [password, setPassword] = useState("");
   const [profileBooks, setProfileBooks] = useState<Book[]>([]);
   const [profileUsers, setProfileUsers] = useState<User[]>([]);
   localStorage.setItem("user", JSON.stringify(user));
+  setIsGoogleSignIn(user!.isGoogleSsoUser);
 
   useEffect(() => {
     const fetchProfileBooks = async () => {
@@ -232,13 +235,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
           </div>
         )}
         <div style={{ marginTop: "30px" }}>
-          {!user.isGoogleSsoUser  && (
           <button onClick={handleUpdateClick} style={{ padding: "7px" }}>
             Update Profile
             <> </>
             <i className="bi bi-pencil-square"></i>
           </button>
-          )}
+        
 
           <button
             onClick={() => handleDeleteAccount(user?._id)}
@@ -262,6 +264,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
               />
             </label>
             
+            {!isGoogleSignIn && (
             <label  style={{ paddingTop: "30px", paddingRight: "200px" }}>
               Email:
               <input
@@ -271,7 +274,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setUpdatedEmail(e.target.value)}
               />
             </label>
-
+            )}
+             {!isGoogleSignIn && (
             <label style={{ paddingTop: "30px", paddingRight: "200px" }}>
               New password:
               <input
@@ -281,7 +285,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </label>
-
+             )}
+             {!isGoogleSignIn && (
             <label style={{ paddingTop: "30px", paddingRight: "120px" }}>
               New Image:
               <input
@@ -291,9 +296,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, setUser }) => {
                 onChange={handleImageChange}
               />
             </label>
+             )}
             <button type="submit">Submit</button>
           </form>
         )}
+       
       </>
     </div>
   );
