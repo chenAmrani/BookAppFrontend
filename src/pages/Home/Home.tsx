@@ -12,7 +12,9 @@ import { api } from "../../utilities/api";
 import { AddEditBook } from "../../components/AddEditBook";
 import { getUserImage } from "../../utilities/auth";
 import axios from "axios";
-import background from "../../assets/background.jpg"
+import background from "../../assets/background.jpg";
+import { FaDollarSign } from "react-icons/fa";
+
 
 
 export const Home = ({ user }: { user: User }) => {
@@ -186,7 +188,8 @@ export const Home = ({ user }: { user: User }) => {
                 marginBottom: "0",
                 fontWeight: "bold",
                 color: "#27ae60",
-                fontSize: window.innerWidth < 600 ? '12px' : 'inherit',
+                fontSize: window.innerWidth < 700 ? '3px' : '12px',
+                backgroundSize: window.innerWidth < 700 ? '1px' : '12px'
               }}
             >
               1 USD = {exchangeRate} ILS
@@ -288,7 +291,7 @@ export const Home = ({ user }: { user: User }) => {
             <div className="col-md-6">
               <h4>Details</h4>
               <p>Year: {selectedBook?.year}</p>
-              <p>Pages: {selectedBook?.pages}</p>
+              <p>Pages: {selectedBook?.pages} <FaDollarSign /></p>
               <p>Price: {selectedBook?.price}</p>
               <p>
                 Rating: <StarRating rating={selectedBook?.rating || 0} />
