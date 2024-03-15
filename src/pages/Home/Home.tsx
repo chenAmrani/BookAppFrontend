@@ -83,7 +83,7 @@ export const Home = ({ user }: { user: User }) => {
           `https://api.apilayer.com/exchangerates_data/latest?symbols=ils&base=usd`,
           {
             headers: {
-              apikey: "6PlRg2D3qY6wF9YlAr1GqwWtGmpoAdD9",
+              apikey: "PQXQM7gYfzbETW6D5ppkwnYgiBpt3K01",
             },
           }
         );
@@ -188,8 +188,7 @@ export const Home = ({ user }: { user: User }) => {
                 marginBottom: "0",
                 fontWeight: "bold",
                 color: "#27ae60",
-                fontSize: window.innerWidth < 700 ? '3px' : '12px',
-                backgroundSize: window.innerWidth < 700 ? '1px' : '12px'
+                zIndex: 9999,
               }}
             >
               1 USD = {exchangeRate} ILS
